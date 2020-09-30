@@ -70,8 +70,8 @@ public interface HandlerList<T extends Event> {
      * Subscribes the listener.
      *
      * @param key      the key to be used to subscribe the listener
-     * @param listener the priority of the listener
-     * @param priority the listener to subscribe
+     * @param listener the listener to subscribe
+     * @param priority the priority of the listener
      * @return {@code true} if it is subscribed, {@code false} otherwise
      */
     boolean subscribe(@NotNull Key key, @NotNull Listener<T> listener, @NotNull Priority priority);
