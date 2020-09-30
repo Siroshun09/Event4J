@@ -43,7 +43,7 @@ Event4J is the simple event library for Java.
 
 ## Documentations
 
-Javadoc: https://siroshun09.github.io/event4j/
+Javadoc: https://siroshun09.github.io/Event4J
 
 ## License
 
