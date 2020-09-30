@@ -23,7 +23,7 @@ Event4J is the simple event library for Java.
     <dependency>
         <groupId>com.github.siroshun09.event4j</groupId>
         <artifactId>event4j</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.1</version>
     </dependency>
 ```
 

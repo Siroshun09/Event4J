@@ -30,7 +30,7 @@
 
     <groupId>com.github.siroshun09.event4j</groupId>
     <artifactId>event4j</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>Event4J</name>
     <url>https://github.com/Siroshun09/Event4J</url>
