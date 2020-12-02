@@ -37,27 +37,31 @@ public interface Priority extends Comparable<Priority> {
     /**
      * Priority: -128
      */
-    Priority LOWEST = () -> -128;
+    Priority LOWEST = of(-128);
 
     /**
      * Priority: -64
      */
-    Priority LOW = () -> -64;
+    Priority LOW = of(-64);
 
     /**
      * Priority: 0
      */
-    Priority NORMAL = () -> 0;
+    Priority NORMAL = of(0);
 
     /**
      * Priority: 64
      */
-    Priority HIGH = () -> 64;
+    Priority HIGH = of(64);
 
     /**
      * Priority: 128
      */
-    Priority HIGHEST = () -> 128;
+    Priority HIGHEST = of(128);
+
+    static @NotNull Priority of(int value) {
+        return new PriorityImpl(value);
+    }
 
     /**
      * Gets the priority value.
