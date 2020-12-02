@@ -1,7 +1,7 @@
 [![Latest Version](https://img.shields.io/bintray/v/siroshun09/maven/Event4J?label=Latest)](https://bintray.com/siroshun09/maven/Event4J/_latestVersion)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/Event4J/Maven?label=Build)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/Event4J?label=License)
-[![Bintray](https://img.shields.io/bintray/v/siroshun09/maven/Event4J?color=orange&label=Javadoc)](https://siroshun09.github.io/event4j/)
+[![Bintray](https://img.shields.io/bintray/v/siroshun09/maven/Event4J?color=orange&label=Javadoc)](https://siroshun09.github.io/Event4J/)
 
 # Event4J
 
