@@ -59,6 +59,12 @@ public interface Priority extends Comparable<Priority> {
      */
     Priority HIGHEST = of(128);
 
+    /**
+     * Creates a new priority.
+     *
+     * @param value the priority value
+     * @return the priority
+     */
     static @NotNull Priority of(int value) {
         return new PriorityImpl(value);
     }
