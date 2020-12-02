@@ -46,11 +46,11 @@ public class PriorityTest {
     @Test
     @DisplayName("Priority test")
     void priorityTest() {
-        subscribe(this::handleCustom1, () -> -256);
+        subscribe(this::handleCustom1, Priority.of(-256));
         subscribe(this::handleLowest, Priority.LOWEST);
         subscribe(this::handleLow, Priority.LOW);
         subscribe(this::handleHighest, Priority.HIGHEST);
-        subscribe(this::handleCustom2, () -> 256);
+        subscribe(this::handleCustom2, Priority.of(256));
         subscribe(this::handleNormal, Priority.NORMAL);
         subscribe(this::handleHigh, Priority.HIGH);
 
