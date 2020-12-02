@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 public class ExceptionHandlingTest {
 
     private final static EventBus BUS = EventBus.newEventBus();
-    private final static Key KEY = Key.of("Test-Key");
+    private final static Key KEY = Key.random();
 
     @Test
     @DisplayName("Exceptions handling test")

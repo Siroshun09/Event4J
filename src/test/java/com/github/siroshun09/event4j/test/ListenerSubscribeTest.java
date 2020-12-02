@@ -42,8 +42,8 @@ public class ListenerSubscribeTest {
 
     private final static EventBus BUS = EventBus.newEventBus();
 
-    private final static Key KEY_1 = Key.of("Key-1");
-    private final static Key KEY_2 = Key.of("Key-2");
+    private final static Key KEY_1 = Key.random();
+    private final static Key KEY_2 = Key.random();
 
     @Test
     @DisplayName("Listener subscription test")
