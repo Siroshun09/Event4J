@@ -29,7 +29,6 @@ import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -51,12 +50,12 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     public void post(@NotNull T event) {
         Objects.requireNonNull(event);
 
-        List<Listener<T>> sortedListenerList =
+        var sortedListenerList =
                 subscribedListeners.stream().sorted()
                         .map(SubscribedListener::getListener)
                         .collect(Collectors.toUnmodifiableList());
 
-        for (Listener<T> listener : sortedListenerList) {
+        for (var listener : sortedListenerList) {
             try {
                 listener.handle(event);
             } catch (Throwable e) {
@@ -87,7 +86,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
         Objects.requireNonNull(listener);
         Objects.requireNonNull(priority);
 
-        SubscribedListener<T> listenerToSubscribe = new SubscribedListener<>(key, listener, priority);
+        var listenerToSubscribe = new SubscribedListener<>(key, listener, priority);
         return subscribedListeners.add(listenerToSubscribe);
     }
 
@@ -98,7 +97,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     public boolean unsubscribe(@NotNull Listener<T> listener) {
         Objects.requireNonNull(listener);
 
-        Set<SubscribedListener<T>> matchedListeners =
+        var matchedListeners =
                 subscribedListeners.stream()
                         .filter(subscribed -> subscribed.listener.equals(listener))
                         .collect(Collectors.toUnmodifiableSet());
@@ -119,7 +118,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
         Objects.requireNonNull(listener);
         Objects.requireNonNull(priority);
 
-        Set<SubscribedListener<T>> matchedListeners =
+        var matchedListeners =
                 subscribedListeners.stream()
                         .filter(subscribed -> subscribed.listener.equals(listener))
                         .filter(subscribed -> subscribed.priority.compareTo(priority) == 0)
@@ -140,7 +139,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     public void unsubscribeAll(@NotNull Key key) {
         Objects.requireNonNull(key);
 
-        Set<SubscribedListener<T>> matchedListeners =
+        var matchedListeners =
                 subscribedListeners.stream()
                         .filter(subscribed -> subscribed.key.equals(key))
                         .collect(Collectors.toUnmodifiableSet());
@@ -196,7 +195,8 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
                 return false;
             }
 
-            SubscribedListener<?> that = (SubscribedListener<?>) o;
+            var that = (SubscribedListener<?>) o;
+
             return Objects.equals(key, that.key) &&
                     Objects.equals(listener, that.listener) &&
                     Objects.equals(priority, that.priority);
