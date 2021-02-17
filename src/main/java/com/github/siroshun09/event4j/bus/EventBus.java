@@ -38,7 +38,7 @@ public interface EventBus {
     /**
      * Creates a new {@link EventBus}.
      *
-     * @return A new {@link EventBus}
+     * @return a new {@link EventBus}
      * @see SimpleEventBus
      */
     @NotNull

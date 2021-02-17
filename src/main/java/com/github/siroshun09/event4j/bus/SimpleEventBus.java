@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * A class that implements {@link EventBus}
+ * A class that implements {@link EventBus}.
  */
 public class SimpleEventBus implements EventBus {
 

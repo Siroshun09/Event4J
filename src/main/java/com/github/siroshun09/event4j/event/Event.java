@@ -55,7 +55,7 @@ public abstract class Event {
     /**
      * Gets a named event.
      *
-     * @return The name of this event.
+     * @return the name of this event.
      */
     @NotNull
     public String getEventName() {
