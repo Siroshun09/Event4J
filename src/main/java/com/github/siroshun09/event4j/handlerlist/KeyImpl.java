@@ -45,8 +45,8 @@ class KeyImpl implements Key {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Key)) return false;
-        var that = (Key) o;
+        if (!(o instanceof KeyImpl)) return false;
+        var that = (KeyImpl) o;
         return name.equals(that.getName());
     }
 
