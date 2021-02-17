@@ -27,6 +27,7 @@ package com.github.siroshun09.event4j.handlerlist;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
     private final Set<SubscribedListener<T>> subscribedListeners;
+    private Logger exceptionLogger;
 
     HandlerListImpl() {
         this.subscribedListeners = new HashSet<>();
@@ -58,12 +60,27 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
         for (var listener : sortedListenerList) {
             try {
                 listener.handle(event);
-            } catch (Throwable e) {
-                Logger.getGlobal().log(Level.WARNING, "An exception occurred while posting the event '" + event.getEventName() + '\'', e);
+            } catch (Throwable exception1) {
+                if (exceptionLogger != null) {
+                    exceptionLogger.log(
+                            Level.WARNING,
+                            "An exception occurred while posting the event '"
+                                    + event.getEventName()
+                                    + '\'',
+                            exception1
+                    );
+                }
 
                 try {
-                    listener.handleException(event, e);
-                } catch (Throwable ignored) {
+                    listener.handleException(event, exception1);
+                } catch (Throwable exception2) {
+                    if (exceptionLogger != null) {
+                        exceptionLogger.log(
+                                Level.WARNING,
+                                "An exception occurred while handling the exception",
+                                exception2
+                        );
+                    }
                 }
             }
         }
@@ -155,6 +172,11 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     @Override
     public int getSize() {
         return subscribedListeners.size();
+    }
+
+    @Override
+    public void setExceptionLogger(@Nullable Logger logger) {
+        this.exceptionLogger = logger;
     }
 
     @Override

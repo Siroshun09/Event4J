@@ -28,6 +28,9 @@ import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.logging.Logger;
 
 /**
  * An interface that manages listeners of the event.
@@ -50,8 +53,11 @@ public interface HandlerList<T extends Event> {
 
     /**
      * Dispatches the event to subscribed listeners.
+     * <p>
      *
      * @param event the event instance
+     * @implNote If the exception logger has been set by {@link HandlerList#setExceptionLogger(Logger)},
+     * it should log any exceptions that occur while processing this method.
      */
     void post(@NotNull T event);
 
@@ -110,4 +116,14 @@ public interface HandlerList<T extends Event> {
      * @return the number of subscribed listeners.
      */
     int getSize();
+
+    /**
+     * Sets the logger to logging exceptions.
+     * <p>
+     * The default exception logger is null, which means that
+     * it will not log any exceptions that occur while processing an event.
+     *
+     * @param logger the logger to logging exceptions
+     */
+    void setExceptionLogger(@Nullable Logger logger);
 }
