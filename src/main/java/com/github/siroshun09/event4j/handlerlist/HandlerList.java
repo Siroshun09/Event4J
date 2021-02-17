@@ -54,10 +54,10 @@ public interface HandlerList<T extends Event> {
     /**
      * Dispatches the event to subscribed listeners.
      * <p>
+     * If the exception logger has been set by {@link HandlerList#setExceptionLogger(Logger)},
+     * it should log any exceptions that occur while processing this method.
      *
      * @param event the event instance
-     * @implNote If the exception logger has been set by {@link HandlerList#setExceptionLogger(Logger)},
-     * it should log any exceptions that occur while processing this method.
      */
     void post(@NotNull T event);
 
