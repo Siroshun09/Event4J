@@ -39,9 +39,9 @@ import java.util.List;
 
 public class PriorityTest {
 
-    private final static EventBus BUS = EventBus.newEventBus();
-    private final static Key KEY = Key.random();
-    private final static List<Integer> RECORDER = new ArrayList<>();
+    private static final EventBus BUS = EventBus.newEventBus();
+    private static final Key KEY = Key.random();
+    private static final List<Integer> RECORDER = new ArrayList<>();
 
     @Test
     @DisplayName("Priority test")

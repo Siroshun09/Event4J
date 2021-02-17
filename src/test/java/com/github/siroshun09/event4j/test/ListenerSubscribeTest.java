@@ -40,10 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ListenerSubscribeTest {
 
-    private final static EventBus BUS = EventBus.newEventBus();
+    private static final EventBus BUS = EventBus.newEventBus();
 
-    private final static Key KEY_1 = Key.random();
-    private final static Key KEY_2 = Key.random();
+    private static final Key KEY_1 = Key.random();
+    private static final Key KEY_2 = Key.random();
 
     @Test
     @DisplayName("Listener subscription test")

@@ -38,8 +38,8 @@ import org.junit.jupiter.api.Test;
 
 public class EventPostingTest {
 
-    private final static EventBus BUS = EventBus.newEventBus();
-    private final static Key KEY = Key.random();
+    private static final EventBus BUS = EventBus.newEventBus();
+    private static final Key KEY = Key.random();
 
     private int receivedCount = 0;
 

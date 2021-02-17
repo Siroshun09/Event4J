@@ -38,14 +38,14 @@ import org.junit.jupiter.api.Test;
 
 public class ListenerUnsubscribeTest {
 
-    private final static EventBus BUS = EventBus.newEventBus();
+    private static final EventBus BUS = EventBus.newEventBus();
 
-    private final static Key KEY_1 = Key.random();
-    private final static Key KEY_2 = Key.random();
+    private static final Key KEY_1 = Key.random();
+    private static final Key KEY_2 = Key.random();
 
-    private final static Listener<SampleEvent2> SAMPLE_LISTENER_2 = e -> {
+    private static final Listener<SampleEvent2> SAMPLE_LISTENER_2 = e -> {
     };
-    private final static Listener<SampleEvent3> SAMPLE_LISTENER_3 = e -> {
+    private static final Listener<SampleEvent3> SAMPLE_LISTENER_3 = e -> {
     };
 
     @Test
