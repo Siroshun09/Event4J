@@ -55,7 +55,7 @@ public class SimpleEventBus implements EventBus {
     public <T extends Event> HandlerList<T> getHandlerList(@NotNull Class<T> eventClass) {
         Objects.requireNonNull(eventClass);
 
-        var handlerList = searchHandlerList(eventClass);
+        var handlerList = searchForHandlerList(eventClass);
 
         if (handlerList == null) {
             handlerList = HandlerList.create();
@@ -85,7 +85,7 @@ public class SimpleEventBus implements EventBus {
         Objects.requireNonNull(event);
 
         var eventClass = (Class<T>) event.getClass();
-        var handlerList = searchHandlerList(eventClass);
+        var handlerList = searchForHandlerList(eventClass);
 
         if (handlerList != null) {
             handlerList.post(event);
@@ -95,7 +95,7 @@ public class SimpleEventBus implements EventBus {
              clazz != null && Event.class.isAssignableFrom(clazz);
              clazz = clazz.getSuperclass()) {
 
-            var subHandlerList = (HandlerList) searchHandlerList((Class<? extends Event>) clazz);
+            var subHandlerList = (HandlerList) searchForHandlerList((Class<? extends Event>) clazz);
 
             if (subHandlerList != null) {
                 subHandlerList.post(event);
@@ -110,7 +110,7 @@ public class SimpleEventBus implements EventBus {
      */
     @SuppressWarnings("unchecked")
     @Nullable
-    private <T extends Event> HandlerList<T> searchHandlerList(@NotNull Class<T> eventClass) {
+    private <T extends Event> HandlerList<T> searchForHandlerList(@NotNull Class<T> eventClass) {
         return (HandlerList<T>) handlers.get(eventClass);
     }
 
