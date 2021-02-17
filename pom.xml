@@ -31,6 +31,7 @@
     <groupId>com.github.siroshun09.event4j</groupId>
     <artifactId>event4j</artifactId>
     <version>1.0.2</version>
+    <packaging>jar</packaging>
 
     <name>Event4J</name>
     <url>https://github.com/Siroshun09/Event4J</url>
@@ -43,6 +44,12 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <developers>
+        <developer>
+            <name>Siroshun09</name>
+        </developer>
+    </developers>
 
     <scm>
         <connection>scm:git:https://github.com/Siroshun09/Event4J.git</connection>
