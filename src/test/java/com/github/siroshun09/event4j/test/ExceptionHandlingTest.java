@@ -41,13 +41,13 @@ public class ExceptionHandlingTest {
     @Test
     @DisplayName("Exceptions handling test")
     void handleExceptionTest() {
-        BUS.getHandlerList(SampleEvent.class).subscribe(KEY, new SampleListener_1());
-        BUS.getHandlerList(SampleEvent.class).subscribe(KEY, new SampleListener_2());
+        BUS.getHandlerList(SampleEvent.class).subscribe(KEY, new SampleListener1());
+        BUS.getHandlerList(SampleEvent.class).subscribe(KEY, new SampleListener2());
 
         Assertions.assertDoesNotThrow(() -> BUS.callEvent(new SampleEvent()));
     }
 
-    private static class SampleListener_1 implements Listener<SampleEvent> {
+    private static class SampleListener1 implements Listener<SampleEvent> {
 
         @Override
         public void handle(@NotNull SampleEvent event) {
@@ -55,7 +55,7 @@ public class ExceptionHandlingTest {
         }
     }
 
-    private static class SampleListener_2 implements Listener<SampleEvent> {
+    private static class SampleListener2 implements Listener<SampleEvent> {
 
         @Override
         public void handle(@NotNull SampleEvent event) {
