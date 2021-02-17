@@ -45,8 +45,8 @@ class PriorityImpl implements Priority {
             return true;
         }
 
-        if (o instanceof Priority) {
-            Priority priority = (Priority) o;
+        if (o instanceof PriorityImpl) {
+            var priority = (PriorityImpl) o;
             return value == priority.getPriority();
         } else {
             return false;
