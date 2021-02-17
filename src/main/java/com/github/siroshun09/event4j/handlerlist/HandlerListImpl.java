@@ -181,7 +181,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
     @Override
     public String toString() {
-        return "HandlerList{" +
+        return "HandlerListImpl{" +
                 "subscribedListeners=" + subscribedListeners +
                 '}';
     }
