@@ -57,7 +57,7 @@ class KeyImpl implements Key {
 
     @Override
     public String toString() {
-        return "Key{" +
+        return "KeyImpl{" +
                 "name='" + name + '\'' +
                 '}';
     }
