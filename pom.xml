@@ -202,7 +202,7 @@
                     <notimestamp>true</notimestamp>
                     <show>protected</show>
                     <bottom>
-                        <![CDATA[<p class="legalCopy">Copyright &#169;2020 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]></bottom>
+                        <![CDATA[<p class="legalCopy">Copyright &#169;2020-2021 <a href="https://github.com/Siroshun09">Siroshun09</a>. All rights reserved.</p>]]></bottom>
                     <links>
                         <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
                     </links>
