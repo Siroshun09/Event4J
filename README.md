@@ -49,4 +49,4 @@ Javadoc: https://siroshun09.github.io/Event4J
 
 This project is under the MIT license. Please see [LICENSE](LICENSE) for more info.
 
-Copyright © 2020, Siroshun09
+Copyright © 2020-2021, Siroshun09
