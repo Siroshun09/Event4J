@@ -48,15 +48,15 @@ public class EventPostingTest {
     void postEventTest() {
         subscribeListeners();
 
-        BUS.callEvent(new TestStartedEvent());
+        BUS.callEvent(new TestStartedEvent()); // 2 times receivedCount increases
 
         for (int i = 0; i < 5; i++) {
-            BUS.callEvent(new SampleEvent());
+            BUS.callEvent(new SampleEvent()); // 10 times receivedCount increases
         }
 
-        BUS.callEvent(new SampleEvent3());
+        BUS.callEvent(new SampleEvent3()); // 3 times receivedCount increases
 
-        BUS.callEvent(new TestFinishedEvent());
+        BUS.callEvent(new TestFinishedEvent()); // 2 times receivedCount increases
 
         Assertions.assertEquals(17, receivedCount);
     }
