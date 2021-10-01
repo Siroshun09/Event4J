@@ -29,20 +29,19 @@ import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
-    private final Set<SubscribedListener<T>> subscribedListeners;
+    private final List<SubscribedListener<T>> subscribedListeners = new ArrayList<>();
     private Logger exceptionLogger;
 
     HandlerListImpl() {
-        this.subscribedListeners = new HashSet<>();
     }
 
     /**
