@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
     private final List<SubscribedListener<T>> subscribedListeners = new ArrayList<>();
+    private final List<Listener<T>> sortedListeners = new ArrayList<>();
     private Logger exceptionLogger;
 
     HandlerListImpl() {
@@ -51,12 +52,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     public void post(@NotNull T event) {
         Objects.requireNonNull(event);
 
-        var sortedListenerList =
-                subscribedListeners.stream().sorted()
-                        .map(SubscribedListener::getListener)
-                        .collect(Collectors.toUnmodifiableList());
-
-        for (var listener : sortedListenerList) {
+        for (var listener : sortedListeners) {
             try {
                 listener.handle(event);
             } catch (Throwable exception1) {
@@ -103,7 +99,15 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
         Objects.requireNonNull(priority);
 
         var listenerToSubscribe = new SubscribedListener<>(key, listener, priority);
-        return subscribedListeners.add(listenerToSubscribe);
+
+        if (subscribedListeners.contains(listenerToSubscribe)) {
+            return false;
+        }
+
+        subscribedListeners.add(listenerToSubscribe);
+        updateSortedListeners();
+
+        return true;
     }
 
     /**
@@ -122,6 +126,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
             return false;
         } else {
             matchedListeners.forEach(subscribedListeners::remove);
+            updateSortedListeners();
             return true;
         }
     }
@@ -144,6 +149,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
             return false;
         } else {
             matchedListeners.forEach(subscribedListeners::remove);
+            updateSortedListeners();
             return true;
         }
     }
@@ -162,6 +168,7 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
         if (!matchedListeners.isEmpty()) {
             matchedListeners.forEach(subscribedListeners::remove);
+            updateSortedListeners();
         }
     }
 
@@ -176,6 +183,16 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     @Override
     public void setExceptionLogger(@Nullable Logger logger) {
         this.exceptionLogger = logger;
+    }
+
+    private void updateSortedListeners() {
+        var newList =
+                subscribedListeners.stream().sorted()
+                        .map(SubscribedListener::getListener)
+                        .collect(Collectors.toUnmodifiableList());
+
+        sortedListeners.clear();
+        sortedListeners.addAll(newList);
     }
 
     @Override
