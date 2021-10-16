@@ -30,16 +30,16 @@ import com.github.siroshun09.event4j.handlerlist.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A class that implements {@link EventBus}.
  */
 public class SimpleEventBus implements EventBus {
 
-    private final Map<Class<?>, HandlerList<?>> handlers = new HashMap<>();
+    private final Map<Class<?>, HandlerList<?>> handlers = new ConcurrentHashMap<>();
 
     /**
      * Creates a {@link SimpleEventBus}.
