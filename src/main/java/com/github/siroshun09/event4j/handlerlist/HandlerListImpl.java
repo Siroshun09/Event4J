@@ -29,17 +29,18 @@ import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 final class HandlerListImpl<T extends Event> implements HandlerList<T> {
 
-    private final List<SubscribedListener<T>> subscribedListeners = new ArrayList<>();
-    private final List<Listener<T>> sortedListeners = new ArrayList<>();
+    private final List<SubscribedListener<T>> subscribedListeners = new CopyOnWriteArrayList<>();
+    private List<Listener<T>> sortedListeners = Collections.emptyList();
     private Logger exceptionLogger;
 
     HandlerListImpl() {
@@ -52,7 +53,9 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     public void post(@NotNull T event) {
         Objects.requireNonNull(event);
 
-        for (var listener : sortedListeners) {
+        var listeners = sortedListeners;
+
+        for (var listener : listeners) {
             try {
                 listener.handle(event);
             } catch (Throwable exception1) {
@@ -186,13 +189,9 @@ final class HandlerListImpl<T extends Event> implements HandlerList<T> {
     }
 
     private void updateSortedListeners() {
-        var newList =
-                subscribedListeners.stream().sorted()
-                        .map(SubscribedListener::getListener)
-                        .collect(Collectors.toUnmodifiableList());
-
-        sortedListeners.clear();
-        sortedListeners.addAll(newList);
+        sortedListeners = subscribedListeners.stream().sorted()
+                .map(SubscribedListener::getListener)
+                .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
