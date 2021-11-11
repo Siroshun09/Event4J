@@ -30,6 +30,11 @@ import com.github.siroshun09.event4j.handlerlist.Key;
 import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 /**
  * An interface that manages listeners of events and dispatches events.
  */
@@ -44,6 +49,18 @@ public interface EventBus {
     @NotNull
     static EventBus newEventBus() {
         return new SimpleEventBus();
+    }
+
+    /**
+     * Creates a new {@link EventBus}.
+     *
+     * @param executor an executor for {@link #callEventAsync(Event)}
+     * @return a new {@link EventBus}
+     * @see SimpleEventBus
+     */
+    @NotNull
+    static EventBus newEventBus(@NotNull Executor executor) {
+        return new SimpleEventBus(executor);
     }
 
     /**
@@ -83,4 +100,41 @@ public interface EventBus {
      * @return the given event instance
      */
     @NotNull <T extends Event> T callEvent(@NotNull T event);
+
+    /**
+     * Calls {@link #callEvent(Event)} asynchronously.
+     *
+     * @param event the event instance
+     * @param <E>   the event type
+     * @return the {@link CompletableFuture}
+     */
+    @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event);
+
+    /**
+     * Calls {@link #callEvent(Event)} asynchronously.
+     *
+     * @param event    the event instance
+     * @param executor the executor to call {@link #callEvent(Event)}
+     * @param <E>      the event type
+     * @return the {@link CompletableFuture}
+     */
+    @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event, @NotNull Executor executor);
+
+    /**
+     * Calls {@link #callEvent(Event)} asynchronously.
+     * <p>
+     * The {@link Supplier} of the input of the {@link Function} is {@code () -> callEvent(event)},
+     * and the event will be called when {@link Supplier#get} is executed.
+     * <p>
+     * In {@link #callEventAsync(Event, Executor)},
+     * the {@link Supplier} is used as {@code supplier -> CompletableFuture.supplyAsync(supplier, executor)}
+     * to create the required {@link Function}.
+     *
+     * @param event          the event instance
+     * @param futureFunction the function to create {@link CompletableFuture} from the given event instance
+     * @param <E>            the event type
+     * @return the {@link CompletableFuture}
+     */
+    @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event,
+                                                                   @NotNull Function<Supplier<E>, CompletableFuture<E>> futureFunction);
 }

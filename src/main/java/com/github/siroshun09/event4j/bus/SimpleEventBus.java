@@ -32,7 +32,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A class that implements {@link EventBus}.
@@ -40,11 +45,22 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimpleEventBus implements EventBus {
 
     private final Map<Class<?>, HandlerList<?>> handlers = new ConcurrentHashMap<>();
+    private final Executor asyncExecutor;
 
     /**
      * Creates a {@link SimpleEventBus}.
      */
     public SimpleEventBus() {
+        this(ForkJoinPool.commonPool());
+    }
+
+    /**
+     * Creates a {@link SimpleEventBus}.
+     *
+     * @param asyncExecutor an executor for {@link #callEventAsync(Event)}
+     */
+    public SimpleEventBus(@NotNull Executor asyncExecutor) {
+        this.asyncExecutor = asyncExecutor;
     }
 
     /**
@@ -103,6 +119,38 @@ public class SimpleEventBus implements EventBus {
         }
 
         return event;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event) {
+        return callEventAsync(event, asyncExecutor);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event, @NotNull Executor executor) {
+        Objects.requireNonNull(executor);
+
+        Function<Supplier<E>, CompletableFuture<E>> function = supplier -> CompletableFuture.supplyAsync(supplier, executor);
+
+        return callEventAsync(event, function);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event,
+                                                                          @NotNull Function<Supplier<E>, CompletableFuture<E>> futureFunction) {
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(futureFunction);
+
+        return futureFunction.apply(() -> callEvent(event));
     }
 
     /**
