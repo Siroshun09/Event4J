@@ -22,13 +22,39 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.priority;
 
-import com.github.siroshun09.event4j.event.Event;
+import org.jetbrains.annotations.NotNull;
 
-public class SampleEvent extends Event {
+import java.util.Objects;
 
-    public int getValue() {
-        return 1;
+record PriorityImpl(int value) implements Priority {
+
+    @Override
+    public int getPriority() {
+        return value;
+    }
+
+    @Override
+    public int compareTo(@NotNull Priority other) {
+        Objects.requireNonNull(other);
+        return Integer.compare(this.getPriority(), other.getPriority());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Priority priority && value == priority.getPriority();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "Priority{" +
+                "value=" + value +
+                '}';
     }
 }

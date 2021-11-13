@@ -22,18 +22,40 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.sample.listener;
 
-import com.github.siroshun09.event4j.event.Cancellable;
+import com.github.siroshun09.event4j.listener.Listener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class SampleEvent2 extends SampleEvent implements Cancellable {
-    @Override
-    public boolean isCancelled() {
-        return false;
+public class ThrowingListener<E> implements Listener<E> {
+
+    public static <E> @NotNull ThrowingListener<E> create() {
+        return new ThrowingListener<>();
+    }
+
+    private final RuntimeException originalException = new RuntimeException();
+    private Throwable handledException;
+
+    private ThrowingListener() {
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
+    public void handle(@NotNull E event) {
+        throw originalException;
+    }
 
+    @Override
+    public void handleException(@NotNull E event, @NotNull Throwable throwable) {
+        handledException = throwable;
+        throw new RuntimeException(throwable);
+    }
+
+    public @NotNull RuntimeException getOriginalException() {
+        return originalException;
+    }
+
+    public @Nullable Throwable getHandledException() {
+        return handledException;
     }
 }

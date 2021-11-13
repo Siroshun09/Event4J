@@ -22,46 +22,55 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.handlerlist;
+package com.github.siroshun09.event4j.key;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-class PriorityImpl implements Priority {
+record KeyImpl(String name) implements Key {
 
-    private final int value;
+    static void checkString(@Nullable String str, @NotNull String valueName) {
+        Objects.requireNonNull(str, valueName);
 
-    PriorityImpl(int value) {
-        this.value = value;
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException("The " + valueName + " must not be empty");
+        }
+    }
+
+    KeyImpl(@NotNull String name) {
+        this.name = Objects.requireNonNull(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @NotNull
+    public String getName() {
+        return name;
     }
 
     @Override
-    public int getPriority() {
-        return value;
+    public int compareTo(@NotNull Key other) {
+        Objects.requireNonNull(other);
+        return name.compareTo(other.getName());
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o instanceof PriorityImpl) {
-            var priority = (PriorityImpl) o;
-            return value == priority.getPriority();
-        } else {
-            return false;
-        }
+    public boolean equals(Object other) {
+        return other instanceof Key that && name.equals(that.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return name.hashCode();
     }
 
     @Override
-    public String toString() {
-        return "PriorityImpl{" +
-                "value=" + value +
+    public @NotNull String toString() {
+        return "Key{" +
+                "name='" + name + '\'' +
                 '}';
     }
 }

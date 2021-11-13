@@ -22,43 +22,26 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.handlerlist;
+package com.github.siroshun09.event4j.test.event;
 
-import org.jetbrains.annotations.NotNull;
+import com.github.siroshun09.event4j.event.Event;
+import com.github.siroshun09.event4j.test.sample.event.CustomNameEvent;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-class KeyImpl implements Key {
+public class EventTest {
 
-    private final String name;
-
-    KeyImpl(@NotNull String name) {
-        this.name = name;
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIllegalArgument() {
+        Assertions.assertThrows(NullPointerException.class, () -> new Event(null) {
+        });
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof KeyImpl)) return false;
-        var that = (KeyImpl) o;
-        return name.equals(that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "KeyImpl{" +
-                "name='" + name + '\'' +
-                '}';
+    @Test
+    void testEventName() {
+        Assertions.assertEquals("SampleEvent", new SampleEvent().getEventName());
+        Assertions.assertEquals("CustomName", new CustomNameEvent().getEventName());
     }
 }

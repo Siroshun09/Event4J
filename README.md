@@ -8,6 +8,10 @@
 
 Event4J is the simple event library for Java.
 
+## Requirements
+
+- Java 16+
+
 ## Usage
 
 #### For Maven:

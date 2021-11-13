@@ -22,51 +22,22 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.listener;
+package com.github.siroshun09.event4j.test.sample.listener;
 
+import com.github.siroshun09.event4j.listener.Listener;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * An interface to receive and process events.
- *
- * @param <E> the event type
- */
-@FunctionalInterface
-public interface Listener<E> {
+public final class CountingListener {
 
-    /**
-     * Creates a new {@link Listener}.
-     *
-     * @param consumer the consumer to consume an event
-     * @param <E>      the event type
-     * @return a new {@link Listener}
-     */
     @Contract(pure = true)
-    static <E> @NotNull Listener<E> create(@NotNull Consumer<E> consumer) {
-        return consumer::accept;
+    public static <E> @NotNull Listener<E> create(@NotNull AtomicInteger counter) {
+        return event -> counter.incrementAndGet();
     }
 
-    /**
-     * The method to receive events.
-     * <p>
-     * If an exception is thrown while calling this method, {@link #handleException(Object, Throwable)} will be called.
-     *
-     * @param event the event
-     */
-    void handle(@NotNull E event);
-
-    /**
-     * The method to be called when an exception is thrown in {@link #handle(Object)}.
-     * <p>
-     * This method does nothing by default.
-     *
-     * @param event     the event
-     * @param throwable the exception that caused
-     */
-    default void handleException(@NotNull E event, @NotNull Throwable throwable) {
-        // do nothing by default
+    private CountingListener() {
+        throw new UnsupportedOperationException();
     }
 }

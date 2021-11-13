@@ -24,148 +24,182 @@
 
 package com.github.siroshun09.event4j.bus;
 
-import com.github.siroshun09.event4j.event.Event;
-import com.github.siroshun09.event4j.handlerlist.HandlerList;
-import com.github.siroshun09.event4j.handlerlist.Key;
+import com.github.siroshun09.event4j.key.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-/**
- * A class that implements {@link EventBus}.
- */
-public class SimpleEventBus implements EventBus {
+class SimpleEventBus<E> implements EventBus<E> {
 
-    private final Map<Class<?>, HandlerList<?>> handlers = new ConcurrentHashMap<>();
+    private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
+    private final AtomicBoolean closed = new AtomicBoolean(false);
+
+    private final Class<E> eventClass;
     private final Executor asyncExecutor;
 
-    /**
-     * Creates a {@link SimpleEventBus}.
-     */
-    public SimpleEventBus() {
-        this(ForkJoinPool.commonPool());
+    private Consumer<PostResult<?>> resultConsumer = null;
+
+    SimpleEventBus(@NotNull Class<E> eventClass, @NotNull Executor asyncExecutor) {
+        this.eventClass = Objects.requireNonNull(eventClass);
+        this.asyncExecutor = Objects.requireNonNull(asyncExecutor);
     }
 
-    /**
-     * Creates a {@link SimpleEventBus}.
-     *
-     * @param asyncExecutor an executor for {@link #callEventAsync(Event)}
-     */
-    public SimpleEventBus(@NotNull Executor asyncExecutor) {
-        this.asyncExecutor = asyncExecutor;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
     @Override
-    public <T extends Event> HandlerList<T> getHandlerList(@NotNull Class<T> eventClass) {
+    public @NotNull Class<E> getEventClass() {
+        return eventClass;
+    }
+
+    @Override
+    public @NotNull <T extends E> EventSubscriber<T> getSubscriber(@NotNull Class<T> eventClass) {
         Objects.requireNonNull(eventClass);
+        checkClosed();
 
-        var handlerList = searchForHandlerList(eventClass);
+        var subscriber = getSubscriberOrNull(eventClass);
 
-        if (handlerList == null) {
-            handlerList = HandlerList.create();
-            handlers.put(eventClass, handlerList);
+        if (subscriber == null) {
+            subscriber = new SimpleEventSubscriber<>();
+            subscriberMap.put(eventClass, subscriber);
         }
 
-        return handlerList;
+        return subscriber;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers() {
+        return Set.copyOf(subscriberMap.values());
+    }
+
     @Override
     public void unsubscribeAll(@NotNull Key key) {
         Objects.requireNonNull(key);
+        checkClosed();
 
-        handlers.values().forEach(handlerList -> handlerList.unsubscribeAll(key));
+        subscriberMap.values().forEach(subscriber -> subscriber.unsubscribeAll(key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    @NotNull
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public <T extends Event> T callEvent(@NotNull T event) {
+    public void unsubscribeIf(@NotNull Predicate<SubscribedListener<?>> predicate) {
+        Objects.requireNonNull(predicate);
+        checkClosed();
+
+        subscriberMap.values().forEach(subscriber -> subscriber.unsubscribeIf(predicate));
+    }
+
+    @Override
+    public <T extends E> @NotNull T callEvent(@NotNull T event) {
         Objects.requireNonNull(event);
+        checkClosed();
 
-        var eventClass = (Class<T>) event.getClass();
-        var handlerList = searchForHandlerList(eventClass);
+        return postEventToSubscribers(event);
+    }
 
-        if (handlerList != null) {
-            handlerList.post(event);
+    @Override
+    public @NotNull <T extends E> CompletableFuture<T> callEventAsync(@NotNull T event) {
+        return callEventAsync(event, asyncExecutor);
+    }
+
+    @Override
+    public @NotNull <T extends E> CompletableFuture<T> callEventAsync(@NotNull T event, @NotNull Executor executor) {
+        Objects.requireNonNull(executor);
+
+        Function<Supplier<T>, CompletableFuture<T>> function = supplier -> CompletableFuture.supplyAsync(supplier, executor);
+
+        return callEventAsync(event, function);
+    }
+
+    @Override
+    public @NotNull <T extends E> CompletableFuture<T> callEventAsync(@NotNull T event,
+                                                                      @NotNull Function<Supplier<T>, CompletableFuture<T>> futureFunction) {
+        Objects.requireNonNull(event);
+        Objects.requireNonNull(futureFunction);
+        checkClosed();
+
+        return futureFunction.apply(() -> callEvent(event));
+    }
+
+    @Override
+    public void close() {
+        checkClosed();
+
+        closed.set(true);
+
+        subscriberMap.values().forEach(SimpleEventSubscriber::close);
+        subscriberMap.clear();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return closed.get();
+    }
+
+    @Override
+    public void setResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
+        Objects.requireNonNull(consumer);
+        checkClosed();
+
+        this.resultConsumer = consumer;
+    }
+
+    @SuppressWarnings("unchecked")
+    private @Nullable <T extends E> SimpleEventSubscriber<T> getSubscriberOrNull(@NotNull Class<T> eventClass) {
+        return (SimpleEventSubscriber<T>) subscriberMap.get(eventClass);
+    }
+
+    private void checkClosed() {
+        if (closed.get()) {
+            throw new IllegalStateException("The eventbus is closed.");
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private <T extends E> @NotNull T postEventToSubscribers(@NotNull T event) {
+        var eventSubscriber = getSubscriberOrNull((Class<T>) event.getClass());
+
+        if (eventSubscriber != null) {
+            consumeResult(eventSubscriber.post(event));
+        } else {
+            consumeResult(() -> PostResult.success(event));
         }
 
-        for (var clazz = eventClass.getSuperclass();
-             clazz != null && Event.class.isAssignableFrom(clazz);
-             clazz = clazz.getSuperclass()) {
+        Class<?> clazz = event.getClass().getSuperclass();
 
-            var subHandlerList = (HandlerList) searchForHandlerList((Class<? extends Event>) clazz);
+        while (clazz != null && eventClass.isAssignableFrom(clazz)) {
+            var subscriber = (EventSubscriber) getSubscriberOrNull((Class) clazz);
 
-            if (subHandlerList != null) {
-                subHandlerList.post(event);
+            if (subscriber != null) {
+                consumeResult(subscriber.post(event));
+            } else {
+                consumeResult(() -> PostResult.success(event));
             }
+
+            clazz = clazz.getSuperclass();
         }
 
         return event;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event) {
-        return callEventAsync(event, asyncExecutor);
+    private void consumeResult(@Nullable PostResult<?> result) {
+        if (resultConsumer != null) {
+            resultConsumer.accept(result);
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event, @NotNull Executor executor) {
-        Objects.requireNonNull(executor);
-
-        Function<Supplier<E>, CompletableFuture<E>> function = supplier -> CompletableFuture.supplyAsync(supplier, executor);
-
-        return callEventAsync(event, function);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull <E extends Event> CompletableFuture<E> callEventAsync(@NotNull E event,
-                                                                          @NotNull Function<Supplier<E>, CompletableFuture<E>> futureFunction) {
-        Objects.requireNonNull(event);
-        Objects.requireNonNull(futureFunction);
-
-        return futureFunction.apply(() -> callEvent(event));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    @Nullable
-    private <T extends Event> HandlerList<T> searchForHandlerList(@NotNull Class<T> eventClass) {
-        return (HandlerList<T>) handlers.get(eventClass);
-    }
-
-    @Override
-    public String toString() {
-        return "SimpleEventBus{" +
-                "handlers=" + handlers +
-                '}';
+    private void consumeResult(@NotNull Supplier<PostResult<?>> resultSupplier) {
+        if (resultConsumer != null) {
+            resultConsumer.accept(resultSupplier.get());
+        }
     }
 }

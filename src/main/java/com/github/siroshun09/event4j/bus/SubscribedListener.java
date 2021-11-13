@@ -22,9 +22,36 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.bus;
 
-import com.github.siroshun09.event4j.event.Event;
+import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.listener.Listener;
+import com.github.siroshun09.event4j.priority.Priority;
+import org.jetbrains.annotations.NotNull;
 
-public class TestFinishedEvent extends Event {
+import java.util.Objects;
+
+/**
+ * A record that represents subscribed {@link Listener}.
+ *
+ * @param <E>      the event type
+ * @param key      the key of that {@link Listener}
+ * @param listener the {@link Listener} instance
+ * @param priority the priority of that {@link Listener}
+ */
+public record SubscribedListener<E>(@NotNull Key key, @NotNull Listener<E> listener, @NotNull Priority priority) {
+
+    /**
+     * Creates a new {@link SubscribedListener}.
+     *
+     * @param key      the key of that {@link Listener}
+     * @param listener the {@link Listener} instance
+     * @param priority the priority of that {@link Listener}
+     */
+    public SubscribedListener(@NotNull Key key, @NotNull Listener<E> listener,
+                              @NotNull Priority priority) {
+        this.key = Objects.requireNonNull(key);
+        this.listener = Objects.requireNonNull(listener);
+        this.priority = Objects.requireNonNull(priority);
+    }
 }

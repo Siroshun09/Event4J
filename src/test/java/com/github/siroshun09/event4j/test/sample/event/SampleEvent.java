@@ -22,22 +22,13 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.sample.event;
 
-import com.github.siroshun09.event4j.event.Cancellable;
 import com.github.siroshun09.event4j.event.Event;
 
-public class CancellableEvent extends Event implements Cancellable {
+public class SampleEvent extends Event {
 
-    private boolean cancel;
-
-    @Override
-    public boolean isCancelled() {
-        return cancel;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
+    public int getValue() {
+        return 1;
     }
 }

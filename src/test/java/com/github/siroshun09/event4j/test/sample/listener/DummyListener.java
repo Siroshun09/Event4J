@@ -22,9 +22,23 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.sample.listener;
 
-import com.github.siroshun09.event4j.event.Event;
+import com.github.siroshun09.event4j.listener.Listener;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public class TestStartedEvent extends Event {
+public class DummyListener<E> implements Listener<E> {
+
+    @Contract(value = " -> new", pure = true)
+    public static <E> @NotNull Listener<E> create() {
+        return new DummyListener<>();
+    }
+
+    private DummyListener() {
+    }
+
+    @Override
+    public void handle(@NotNull E event) {
+    }
 }

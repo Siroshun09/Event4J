@@ -22,36 +22,22 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test;
+package com.github.siroshun09.event4j.test.bus;
 
-import com.github.siroshun09.event4j.bus.EventBus;
-import com.github.siroshun09.event4j.event.Event;
-import com.github.siroshun09.event4j.handlerlist.Key;
-import com.github.siroshun09.event4j.test.event.SampleEvent;
-import org.jetbrains.annotations.NotNull;
+import com.github.siroshun09.event4j.bus.SubscribedListener;
+import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.test.sample.listener.DummyListener;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AsyncEventPostingTest {
+public class SubscribedListenerTest {
 
-    private Thread eventThread;
-
+    @SuppressWarnings("ConstantConditions")
     @Test
-    void testAsyncEventPosting() {
-        var bus = EventBus.newEventBus();
-        var key = Key.random();
-        var mainThread = Thread.currentThread();
-
-        bus.getHandlerList(SampleEvent.class).subscribe(key, this::processEvent);
-
-        bus.callEvent(new SampleEvent());
-        Assertions.assertEquals(mainThread, eventThread);
-
-        bus.callEventAsync(new SampleEvent()).join();
-        Assertions.assertNotEquals(mainThread, eventThread);
+    void testIllegalArguments() {
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(null, null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Key.random(), null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Key.random(), DummyListener.create(), null));
     }
 
-    private void processEvent(@NotNull Event event) {
-        eventThread = Thread.currentThread();
-    }
 }

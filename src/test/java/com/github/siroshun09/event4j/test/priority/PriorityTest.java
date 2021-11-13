@@ -22,11 +22,41 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.priority;
 
-public class SampleEvent3 extends SampleEvent2 {
+import com.github.siroshun09.event4j.priority.Priority;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-    public int getValue2() {
-        return 2;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class PriorityTest {
+
+    @Test
+    void testDefaultPriorities() {
+        Assertions.assertEquals(-128, Priority.LOWEST.getPriority());
+        Assertions.assertEquals(-64, Priority.LOW.getPriority());
+        Assertions.assertEquals(0, Priority.NORMAL.getPriority());
+        Assertions.assertEquals(64, Priority.HIGH.getPriority());
+        Assertions.assertEquals(128, Priority.HIGHEST.getPriority());
+    }
+
+    @Test
+    void testComparing() {
+        var expected = List.of(
+                Priority.value(-300),
+                Priority.LOWEST, Priority.LOW,
+                Priority.NORMAL,
+                Priority.HIGH, Priority.HIGHEST,
+                Priority.value(300)
+        );
+
+        var copied = new ArrayList<>(expected);
+        Collections.shuffle(copied);
+
+        Assertions.assertEquals(expected, copied.stream().sorted().collect(Collectors.toList()));
     }
 }
