@@ -22,7 +22,7 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.sample.event;
 
 import com.github.siroshun09.event4j.event.Event;
 

@@ -22,18 +22,22 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.test.bus;
 
-import com.github.siroshun09.event4j.event.Cancellable;
+import com.github.siroshun09.event4j.bus.SubscribedListener;
+import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.test.sample.listener.DummyListener;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class SampleEvent2 extends SampleEvent implements Cancellable {
-    @Override
-    public boolean isCancelled() {
-        return false;
+public class SubscribedListenerTest {
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIllegalArguments() {
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(null, null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Key.random(), null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Key.random(), DummyListener.create(), null));
     }
 
-    @Override
-    public void setCancelled(boolean cancel) {
-
-    }
 }

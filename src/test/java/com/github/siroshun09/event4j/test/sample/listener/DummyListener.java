@@ -22,36 +22,23 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test;
+package com.github.siroshun09.event4j.test.sample.listener;
 
-import com.github.siroshun09.event4j.bus.EventBus;
-import com.github.siroshun09.event4j.event.Event;
-import com.github.siroshun09.event4j.handlerlist.Key;
-import com.github.siroshun09.event4j.test.event.SampleEvent;
+import com.github.siroshun09.event4j.listener.Listener;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
-public class AsyncEventPostingTest {
+public class DummyListener<E> implements Listener<E> {
 
-    private Thread eventThread;
-
-    @Test
-    void testAsyncEventPosting() {
-        var bus = EventBus.newEventBus();
-        var key = Key.random();
-        var mainThread = Thread.currentThread();
-
-        bus.getHandlerList(SampleEvent.class).subscribe(key, this::processEvent);
-
-        bus.callEvent(new SampleEvent());
-        Assertions.assertEquals(mainThread, eventThread);
-
-        bus.callEventAsync(new SampleEvent()).join();
-        Assertions.assertNotEquals(mainThread, eventThread);
+    @Contract(value = " -> new", pure = true)
+    public static <E> @NotNull Listener<E> create() {
+        return new DummyListener<>();
     }
 
-    private void processEvent(@NotNull Event event) {
-        eventThread = Thread.currentThread();
+    private DummyListener() {
+    }
+
+    @Override
+    public void handle(@NotNull E event) {
     }
 }

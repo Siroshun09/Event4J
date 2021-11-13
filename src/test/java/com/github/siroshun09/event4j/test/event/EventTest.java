@@ -24,9 +24,24 @@
 
 package com.github.siroshun09.event4j.test.event;
 
-public class SampleEvent3 extends SampleEvent2 {
+import com.github.siroshun09.event4j.event.Event;
+import com.github.siroshun09.event4j.test.sample.event.CustomNameEvent;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-    public int getValue2() {
-        return 2;
+public class EventTest {
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIllegalArgument() {
+        Assertions.assertThrows(NullPointerException.class, () -> new Event(null) {
+        });
+    }
+
+    @Test
+    void testEventName() {
+        Assertions.assertEquals("SampleEvent", new SampleEvent().getEventName());
+        Assertions.assertEquals("CustomName", new CustomNameEvent().getEventName());
     }
 }
