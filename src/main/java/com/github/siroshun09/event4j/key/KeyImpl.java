@@ -22,16 +22,25 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.handlerlist;
+package com.github.siroshun09.event4j.key;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-class KeyImpl implements Key {
+import java.util.Objects;
 
-    private final String name;
+record KeyImpl(String name) implements Key {
+
+    static void checkString(@Nullable String str, @NotNull String valueName) {
+        Objects.requireNonNull(str, valueName);
+
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException("The " + valueName + " must not be empty");
+        }
+    }
 
     KeyImpl(@NotNull String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
     }
 
     /**
@@ -43,11 +52,14 @@ class KeyImpl implements Key {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof KeyImpl)) return false;
-        var that = (KeyImpl) o;
-        return name.equals(that.getName());
+    public int compareTo(@NotNull Key other) {
+        Objects.requireNonNull(other);
+        return name.compareTo(other.getName());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Key that && name.equals(that.getName());
     }
 
     @Override
@@ -56,8 +68,8 @@ class KeyImpl implements Key {
     }
 
     @Override
-    public String toString() {
-        return "KeyImpl{" +
+    public @NotNull String toString() {
+        return "Key{" +
                 "name='" + name + '\'' +
                 '}';
     }

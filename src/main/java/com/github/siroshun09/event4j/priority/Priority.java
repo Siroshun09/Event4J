@@ -22,42 +22,39 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.handlerlist;
+package com.github.siroshun09.event4j.priority;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 /**
  * An interface to set the listener's priority.
  */
-@FunctionalInterface
 public interface Priority extends Comparable<Priority> {
 
     /**
-     * Priority: -128
+     * Priority value: -128
      */
-    Priority LOWEST = of(-128);
+    Priority LOWEST = value(-128);
 
     /**
-     * Priority: -64
+     * Priority value: -64
      */
-    Priority LOW = of(-64);
+    Priority LOW = value(-64);
 
     /**
-     * Priority: 0
+     * Priority value: 0
      */
-    Priority NORMAL = of(0);
+    Priority NORMAL = value(0);
 
     /**
-     * Priority: 64
+     * Priority value: 64
      */
-    Priority HIGH = of(64);
+    Priority HIGH = value(64);
 
     /**
-     * Priority: 128
+     * Priority value: 128
      */
-    Priority HIGHEST = of(128);
+    Priority HIGHEST = value(128);
 
     /**
      * Creates a new priority.
@@ -65,7 +62,7 @@ public interface Priority extends Comparable<Priority> {
      * @param value the priority value
      * @return the priority
      */
-    static @NotNull Priority of(int value) {
+    static @NotNull Priority value(int value) {
         return new PriorityImpl(value);
     }
 
@@ -75,10 +72,4 @@ public interface Priority extends Comparable<Priority> {
      * @return the priority value
      */
     int getPriority();
-
-    @Override
-    default int compareTo(@NotNull Priority other) {
-        Objects.requireNonNull(other);
-        return Integer.compare(this.getPriority(), other.getPriority());
-    }
 }

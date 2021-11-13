@@ -24,35 +24,49 @@
 
 package com.github.siroshun09.event4j.listener;
 
-import com.github.siroshun09.event4j.event.Event;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
 
 /**
  * An interface to receive and process events.
  *
- * @param <T> the event type
+ * @param <E> the event type
  */
 @FunctionalInterface
-public interface Listener<T extends Event> {
+public interface Listener<E> {
+
+    /**
+     * Creates a new {@link Listener}.
+     *
+     * @param consumer the consumer to consume an event
+     * @param <E>      the event type
+     * @return a new {@link Listener}
+     */
+    @Contract(pure = true)
+    static <E> @NotNull Listener<E> create(@NotNull Consumer<E> consumer) {
+        return consumer::accept;
+    }
 
     /**
      * The method to receive events.
      * <p>
-     * If an exception is thrown while calling this method, {@link Listener#handleException(Event, Throwable)} will be called.
+     * If an exception is thrown while calling this method, {@link #handleException(Object, Throwable)} will be called.
      *
      * @param event the event
      */
-    void handle(@NotNull T event);
+    void handle(@NotNull E event);
 
     /**
-     * The method to be called when an exception is thrown in {@link Listener#handle(Event)}.
+     * The method to be called when an exception is thrown in {@link #handle(Object)}.
      * <p>
      * This method does nothing by default.
      *
      * @param event     the event
      * @param throwable the exception that caused
      */
-    default void handleException(@NotNull T event, @NotNull Throwable throwable) {
-        // do nothing
+    default void handleException(@NotNull E event, @NotNull Throwable throwable) {
+        // do nothing by default
     }
 }

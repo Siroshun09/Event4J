@@ -22,22 +22,39 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.event;
+package com.github.siroshun09.event4j.priority;
 
-import com.github.siroshun09.event4j.event.Cancellable;
-import com.github.siroshun09.event4j.event.Event;
+import org.jetbrains.annotations.NotNull;
 
-public class CancellableEvent extends Event implements Cancellable {
+import java.util.Objects;
 
-    private boolean cancel;
+record PriorityImpl(int value) implements Priority {
 
     @Override
-    public boolean isCancelled() {
-        return cancel;
+    public int getPriority() {
+        return value;
     }
 
     @Override
-    public void setCancelled(boolean cancel) {
-        this.cancel = cancel;
+    public int compareTo(@NotNull Priority other) {
+        Objects.requireNonNull(other);
+        return Integer.compare(this.getPriority(), other.getPriority());
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Priority priority && value == priority.getPriority();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "Priority{" +
+                "value=" + value +
+                '}';
     }
 }

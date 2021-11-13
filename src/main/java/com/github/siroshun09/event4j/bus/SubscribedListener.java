@@ -22,46 +22,36 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.handlerlist;
+package com.github.siroshun09.event4j.bus;
+
+import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.listener.Listener;
+import com.github.siroshun09.event4j.priority.Priority;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-class PriorityImpl implements Priority {
+/**
+ * A record that represents subscribed {@link Listener}.
+ *
+ * @param <E>      the event type
+ * @param key      the key of that {@link Listener}
+ * @param listener the {@link Listener} instance
+ * @param priority the priority of that {@link Listener}
+ */
+public record SubscribedListener<E>(@NotNull Key key, @NotNull Listener<E> listener, @NotNull Priority priority) {
 
-    private final int value;
-
-    PriorityImpl(int value) {
-        this.value = value;
-    }
-
-    @Override
-    public int getPriority() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o instanceof PriorityImpl) {
-            var priority = (PriorityImpl) o;
-            return value == priority.getPriority();
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-
-    @Override
-    public String toString() {
-        return "PriorityImpl{" +
-                "value=" + value +
-                '}';
+    /**
+     * Creates a new {@link SubscribedListener}.
+     *
+     * @param key      the key of that {@link Listener}
+     * @param listener the {@link Listener} instance
+     * @param priority the priority of that {@link Listener}
+     */
+    public SubscribedListener(@NotNull Key key, @NotNull Listener<E> listener,
+                              @NotNull Priority priority) {
+        this.key = Objects.requireNonNull(key);
+        this.listener = Objects.requireNonNull(listener);
+        this.priority = Objects.requireNonNull(priority);
     }
 }
