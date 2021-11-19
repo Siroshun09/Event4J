@@ -27,8 +27,4 @@ package com.github.siroshun09.event4j.test.sample.event;
 import com.github.siroshun09.event4j.event.Event;
 
 public class SampleEvent extends Event {
-
-    public int getValue() {
-        return 1;
-    }
 }

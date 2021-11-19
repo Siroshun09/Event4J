@@ -24,16 +24,5 @@
 
 package com.github.siroshun09.event4j.test.sample.event;
 
-import com.github.siroshun09.event4j.event.Cancellable;
-
-public class SampleEvent2 extends SampleEvent implements Cancellable {
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
-
-    @Override
-    public void setCancelled(boolean cancel) {
-
-    }
+public class SampleEvent2 extends SampleEvent {
 }
