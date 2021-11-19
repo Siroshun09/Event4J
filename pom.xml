@@ -202,7 +202,7 @@
                     <notimestamp>true</notimestamp>
                     <show>protected</show>
                     <links>
-                        <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
+                        <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
                     </links>
                 </configuration>
             </plugin>
