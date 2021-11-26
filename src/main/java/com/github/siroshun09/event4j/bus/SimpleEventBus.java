@@ -30,11 +30,13 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -50,7 +52,7 @@ class SimpleEventBus<E> implements EventBus<E> {
     private final Class<E> eventClass;
     private final Executor asyncExecutor;
 
-    private Consumer<PostResult<?>> resultConsumer = null;
+    private final List<Consumer<PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
 
     SimpleEventBus(@NotNull Class<E> eventClass, @NotNull Executor asyncExecutor) {
         this.eventClass = Objects.requireNonNull(eventClass);
@@ -146,11 +148,19 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     @Override
-    public void setResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
+    public boolean addResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
         Objects.requireNonNull(consumer);
         checkClosed();
 
-        this.resultConsumer = consumer;
+        return resultConsumers.add(consumer);
+    }
+
+    @Override
+    public boolean removeResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
+        Objects.requireNonNull(consumer);
+        checkClosed();
+
+        return resultConsumers.remove(consumer);
     }
 
     @SuppressWarnings("unchecked")
@@ -192,14 +202,32 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     private void consumeResult(@Nullable PostResult<?> result) {
-        if (resultConsumer != null) {
-            resultConsumer.accept(result);
+        if (resultConsumers.isEmpty()) {
+            return;
+        }
+
+        if (1 < resultConsumers.size()) {
+            for (var consumer : resultConsumers) {
+                consumer.accept(result);
+            }
+        } else {
+            resultConsumers.get(0).accept(result);
         }
     }
 
     private void consumeResult(@NotNull Supplier<PostResult<?>> resultSupplier) {
-        if (resultConsumer != null) {
-            resultConsumer.accept(resultSupplier.get());
+        if (resultConsumers.isEmpty()) {
+            return;
+        }
+
+        var result = resultSupplier.get();
+
+        if (1 < resultConsumers.size()) {
+            for (var consumer : resultConsumers) {
+                consumer.accept(result);
+            }
+        } else {
+            resultConsumers.get(0).accept(result);
         }
     }
 }

@@ -25,6 +25,7 @@
 package com.github.siroshun09.event4j.test.bus;
 
 import com.github.siroshun09.event4j.bus.EventBus;
+import com.github.siroshun09.event4j.bus.PostResult;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
@@ -42,6 +43,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -138,7 +140,7 @@ public class EventBusTest {
         var isFailure = new AtomicBoolean();
         var exceptionReference = new AtomicReference<Throwable>();
 
-        bus.setResultConsumer(result -> {
+        bus.addResultConsumer(result -> {
             var exception = result.exceptions().get(subscribed);
 
             if (exception != null) {
@@ -156,6 +158,33 @@ public class EventBusTest {
 
         Assertions.assertEquals(listener.getOriginalException(), exceptionReference.get());
         Assertions.assertEquals(listener.getOriginalException(), listener.getHandledException());
+    }
+
+    @Test
+    void testResultConsumer() {
+        var bus = EventBus.create();
+        var counter = new AtomicInteger();
+
+        var consumer1 = (Consumer<PostResult<?>>) result -> counter.incrementAndGet();
+        bus.addResultConsumer(consumer1);
+
+        bus.callEvent(new SampleEvent());
+
+        Assertions.assertEquals(2, counter.getAndSet(0));
+
+        var consumer2 = (Consumer<PostResult<?>>) result -> counter.incrementAndGet();
+        bus.addResultConsumer(consumer2);
+
+        bus.callEvent(new SampleEvent());
+
+        Assertions.assertEquals(4, counter.getAndSet(0));
+
+        Assertions.assertTrue(bus.removeResultConsumer(consumer1));
+        Assertions.assertFalse(bus.removeResultConsumer(result -> new Object()));
+
+        bus.callEvent(new SampleEvent());
+
+        Assertions.assertEquals(2, counter.get());
     }
 
     @Test
@@ -179,7 +208,8 @@ public class EventBusTest {
         Assertions.assertThrows(IllegalStateException.class, () -> bus.callEventAsync(new SampleEvent()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.callEventAsync(new SampleEvent(), Runnable::run));
         Assertions.assertThrows(IllegalStateException.class, bus::close);
-        Assertions.assertThrows(IllegalStateException.class, () -> bus.setResultConsumer(r -> new Object()));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.addResultConsumer(r -> new Object()));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.removeResultConsumer(r -> new Object()));
     }
 
     @SuppressWarnings({"ResultOfMethodCallIgnored", "ConstantConditions"})
@@ -200,6 +230,7 @@ public class EventBusTest {
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEventAsync(null, Runnable::run));
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEventAsync(new SampleEvent(), (Executor) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEventAsync(null, (Function<Supplier<Event>, CompletableFuture<Event>>) null));
-        Assertions.assertThrows(NullPointerException.class, () -> bus.setResultConsumer(null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.addResultConsumer(null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.removeResultConsumer(null));
     }
 }
