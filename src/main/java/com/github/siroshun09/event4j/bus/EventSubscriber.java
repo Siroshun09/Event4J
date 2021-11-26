@@ -42,6 +42,13 @@ import java.util.function.Predicate;
 public interface EventSubscriber<E> {
 
     /**
+     * Gets the event {@link Class} of this subscriber.
+     *
+     * @return the event {@link Class} of this subscriber
+     */
+    @NotNull Class<E> getEventClass();
+
+    /**
      * Posts the event instance to subscribed listeners.
      *
      * @param event the event instance

@@ -44,10 +44,17 @@ class SimpleEventSubscriber<E> implements EventSubscriber<E> {
 
     private final List<SubscribedListener<E>> subscribedListeners = new CopyOnWriteArrayList<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
+    private final Class<E> eventClass;
 
     private List<SubscribedListener<E>> sortedListeners = Collections.emptyList();
 
-    SimpleEventSubscriber() {
+    SimpleEventSubscriber(@NotNull Class<E> eventClass) {
+        this.eventClass = eventClass;
+    }
+
+    @Override
+    public @NotNull Class<E> getEventClass() {
+        return eventClass;
     }
 
     @Override

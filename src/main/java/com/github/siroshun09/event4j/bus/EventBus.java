@@ -211,10 +211,22 @@ public interface EventBus<E> {
     boolean isClosed();
 
     /**
-     * Sets the {@link Consumer} to consume {@link PostResult}.
+     * Adds the {@link Consumer} to consume {@link PostResult}.
      *
-     * @param consumer the {@link Consumer} to consume {@link PostResult}
+     * @param consumer the {@link Consumer} to add
      * @throws IllegalStateException if this event bus is already closed
+     * @return if the consumer has been added to this event bus, returns {@code true}, otherwise {@code false}
      */
-    void setResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
+    @SuppressWarnings("UnusedReturnValue")
+    boolean addResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
+
+    /**
+     * Removes the {@link Consumer} to consume {@link PostResult}.
+     *
+     * @param consumer the {@link Consumer} to remove
+     * @throws IllegalStateException if this event bus is already closed
+     * @return if the consumer has been removed from this event bus, returns {@code true}, otherwise {@code false}
+     */
+    @SuppressWarnings("UnusedReturnValue")
+    boolean removeResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
 }
