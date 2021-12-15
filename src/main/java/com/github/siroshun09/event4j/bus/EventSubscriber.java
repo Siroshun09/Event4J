@@ -81,8 +81,8 @@ public interface EventSubscriber<E> {
     /**
      * Subscribes the new {@link Listener}.
      *
-     * @param key      the key
-     * @param listener the {@link Listener} to subscribe
+     * @param key           the key
+     * @param listener      the {@link Listener} to subscribe
      * @param priorityValue the priority value of the {@link Listener}
      * @return the {@link SubscribedListener}
      * @throws IllegalStateException if this subscriber is already closed

@@ -34,11 +34,11 @@ import java.util.Objects;
 /**
  * A record that represents subscribed {@link Listener}.
  *
- * @param <E>      the event type
+ * @param <E>        the event type
  * @param eventClass tye event {@link Class}
- * @param key      the key of that {@link Listener}
- * @param listener the {@link Listener} instance
- * @param priority the priority of that {@link Listener}
+ * @param key        the key of that {@link Listener}
+ * @param listener   the {@link Listener} instance
+ * @param priority   the priority of that {@link Listener}
  */
 public record SubscribedListener<E>(@NotNull Class<E> eventClass, @NotNull Key key,
                                     @NotNull Listener<E> listener, @NotNull Priority priority) {
@@ -47,9 +47,9 @@ public record SubscribedListener<E>(@NotNull Class<E> eventClass, @NotNull Key k
      * Creates a new {@link SubscribedListener}.
      *
      * @param eventClass tye event {@link Class}
-     * @param key      the key of that {@link Listener}
-     * @param listener the {@link Listener} instance
-     * @param priority the priority of that {@link Listener}
+     * @param key        the key of that {@link Listener}
+     * @param listener   the {@link Listener} instance
+     * @param priority   the priority of that {@link Listener}
      */
     public SubscribedListener(@NotNull Class<E> eventClass, @NotNull Key key,
                               @NotNull Listener<E> listener, @NotNull Priority priority) {
