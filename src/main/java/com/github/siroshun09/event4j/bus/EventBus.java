@@ -118,12 +118,12 @@ public interface EventBus<E> {
     @NotNull <T extends E> EventSubscriber<T> getSubscriber(@NotNull Class<T> eventClass);
 
     /**
-     * Gets the collection of registered {@link EventSubscriber}s.
+     * Gets the collection of subscribed {@link EventSubscriber}s.
      * <p>
      * Included in this collection are subscribers to events
      * in which {@link #getSubscriber(Class)} has been called at least once.
      *
-     * @return the collection of registered {@link EventSubscriber}s
+     * @return the collection of subscribed {@link EventSubscriber}s
      */
     @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers();
 
