@@ -26,6 +26,7 @@ package com.github.siroshun09.event4j.test.bus;
 
 import com.github.siroshun09.event4j.bus.PostResult;
 import com.github.siroshun09.event4j.bus.SubscribedListener;
+import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
 import com.github.siroshun09.event4j.priority.Priority;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
@@ -45,7 +46,7 @@ public class PostResultTest {
         Assertions.assertThrows(NullPointerException.class, () -> PostResult.success(null));
         Assertions.assertThrows(IllegalArgumentException.class, () -> PostResult.failure(null, Collections.emptyMap()));
         Assertions.assertThrows(NullPointerException.class, () -> PostResult.failure(new SampleEvent(), null));
-        Assertions.assertThrows(NullPointerException.class, () -> PostResult.failure(null, createDummyExceptionMap()));
+        Assertions.assertThrows(NullPointerException.class, () -> PostResult.failure(null, createDummyExceptionMap(Event.class)));
     }
 
     @Test
@@ -54,12 +55,12 @@ public class PostResultTest {
         Assertions.assertTrue(success.isSuccess());
         Assertions.assertFalse(success.isFailure());
 
-        var failure = PostResult.failure(new SampleEvent(), createDummyExceptionMap());
+        var failure = PostResult.failure(new SampleEvent(), createDummyExceptionMap(SampleEvent.class));
         Assertions.assertFalse(failure.isSuccess());
         Assertions.assertTrue(failure.isFailure());
     }
 
-    private <E> @NotNull Map<SubscribedListener<E>, Throwable> createDummyExceptionMap() {
-        return Map.of(new SubscribedListener<>(Key.random(), DummyListener.create(), Priority.HIGH), new Throwable());
+    private <E> @NotNull Map<SubscribedListener<E>, Throwable> createDummyExceptionMap(@NotNull Class<E> eventClass) {
+        return Map.of(new SubscribedListener<>(eventClass, Key.random(), DummyListener.create(), Priority.HIGH), new Throwable());
     }
 }

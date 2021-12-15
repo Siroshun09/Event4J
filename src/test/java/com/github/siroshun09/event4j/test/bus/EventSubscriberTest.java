@@ -43,6 +43,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class EventSubscriberTest {
 
     @Test
+    void testCreating() {
+        var bus = EventBus.create();
+
+        var subscriber = bus.getSubscriber(SampleEvent.class);
+
+        Assertions.assertTrue(subscriber.getSubscribedListeners().isEmpty());
+        Assertions.assertFalse(subscriber.isClosed());
+        Assertions.assertSame(SampleEvent.class, subscriber.getEventClass());
+    }
+
+    @Test
     void testListenerSubscribing() {
         var bus = EventBus.create();
         var subscriber = bus.getSubscriber(SampleEvent.class);
@@ -147,8 +158,27 @@ public class EventSubscriberTest {
         Assertions.assertThrows(IllegalStateException.class, () -> subscriber.post(new SampleEvent()));
         Assertions.assertThrows(IllegalStateException.class, () -> subscriber.subscribe(Key.random(), DummyListener.create()));
         Assertions.assertThrows(IllegalStateException.class, () -> subscriber.subscribe(Key.random(), DummyListener.create(), Priority.HIGH));
-        Assertions.assertThrows(IllegalStateException.class, () -> subscriber.unsubscribe(new SubscribedListener<>(Key.random(), DummyListener.create(), Priority.NORMAL)));
+        Assertions.assertThrows(IllegalStateException.class, () -> subscriber.unsubscribe(new SubscribedListener<>(SampleEvent.class, Key.random(), DummyListener.create(), Priority.NORMAL)));
         Assertions.assertThrows(IllegalStateException.class, () -> subscriber.unsubscribeAll(Key.random()));
         Assertions.assertThrows(IllegalStateException.class, () -> subscriber.unsubscribeIf(s -> true));
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    void testIllegalArguments() {
+        var bus = EventBus.create();
+        var subscriber = bus.getSubscriber(SampleEvent.class);
+
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.post(null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(Key.random(), null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(null, null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(Key.random(), DummyListener.create(), null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(Key.random(), DummyListener.create(), null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(null, null, 0));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.subscribe(Key.random(), null, 0));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.unsubscribe(null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.unsubscribeAll(null));
+        Assertions.assertThrows(NullPointerException.class, () -> subscriber.unsubscribeIf(null));
     }
 }

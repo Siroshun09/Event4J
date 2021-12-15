@@ -22,24 +22,44 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.bus;
+package com.github.siroshun09.event4j.test.sample.listener;
 
-import com.github.siroshun09.event4j.bus.SubscribedListener;
 import com.github.siroshun09.event4j.event.Event;
-import com.github.siroshun09.event4j.key.Key;
-import com.github.siroshun09.event4j.test.sample.listener.DummyListener;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.github.siroshun09.event4j.listener.MultipleListeners;
+import com.github.siroshun09.event4j.listener.Subscribe;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent2;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public class SubscribedListenerTest {
+import java.util.concurrent.atomic.AtomicInteger;
 
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    void testIllegalArguments() {
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(null, null, null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, null, null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, Key.random(), null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, Key.random(), DummyListener.create(), null));
+@SuppressWarnings("ClassCanBeRecord")
+public class CountingMultipleListeners implements MultipleListeners {
+
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull CountingMultipleListeners create(@NotNull AtomicInteger counter) {
+        return new CountingMultipleListeners(counter);
     }
 
+    private final AtomicInteger counter;
+
+    private CountingMultipleListeners(@NotNull AtomicInteger counter) {
+        this.counter = counter;
+    }
+
+    @Subscribe
+    public void onEvent(@NotNull Event event) {
+        counter.incrementAndGet();
+    }
+
+    @Subscribe
+    public void onSampleEvent(@NotNull SampleEvent event) {
+        counter.incrementAndGet();
+    }
+
+    @Subscribe
+    public void onSampleEvent2(@NotNull SampleEvent2 event2) {
+        counter.incrementAndGet();
+    }
 }

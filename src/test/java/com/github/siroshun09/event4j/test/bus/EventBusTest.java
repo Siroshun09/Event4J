@@ -25,14 +25,20 @@
 package com.github.siroshun09.event4j.test.bus;
 
 import com.github.siroshun09.event4j.bus.EventBus;
+import com.github.siroshun09.event4j.bus.EventSubscriber;
 import com.github.siroshun09.event4j.bus.PostResult;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.listener.MultipleListeners;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent2;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent3;
 import com.github.siroshun09.event4j.test.sample.listener.CountingListener;
+import com.github.siroshun09.event4j.test.sample.listener.CountingMultipleListeners;
+import com.github.siroshun09.event4j.test.sample.listener.DummyMultipleListeners;
+import com.github.siroshun09.event4j.test.sample.listener.PrioritizedListeners;
 import com.github.siroshun09.event4j.test.sample.listener.ThrowingListener;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -188,6 +194,55 @@ public class EventBusTest {
     }
 
     @Test
+    void testSubscribingMultipleListeners() {
+        var bus = EventBus.create();
+        var counter = new AtomicInteger();
+
+        var listeners = CountingMultipleListeners.create(counter);
+
+        Assertions.assertEquals(3, bus.subscribeAll(Key.random(), listeners).size());
+        Assertions.assertEquals(3, bus.getSubscribers().stream().map(EventSubscriber::getSubscribedListeners).mapToInt(List::size).sum());
+
+        bus.callEvent(new SampleEvent());
+        bus.callEvent(new SampleEvent2());
+        Assertions.assertEquals(5, counter.get());
+
+        Assertions.assertDoesNotThrow(() -> bus.subscribeAll(Key.random(), DummyMultipleListeners.create()));
+        Assertions.assertDoesNotThrow(() -> bus.subscribeAll(Key.random(), CountingMultipleListeners.create(counter)));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.subscribeAll(Key.random(), listeners));
+    }
+
+    @Test
+    void testUnsubscribingMultipleListeners() {
+        var bus = EventBus.create();
+        var counter = new AtomicInteger();
+
+        var listeners = CountingMultipleListeners.create(counter);
+
+        bus.subscribeAll(Key.random(), listeners);
+
+        Assertions.assertEquals(3, getNumberOfListeners(bus));
+
+        bus.unsubscribeAll(listeners);
+
+        Assertions.assertEquals(0, getNumberOfListeners(bus));
+
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(DummyMultipleListeners.create()));
+    }
+
+    @Test
+    void testPrioritizedListeners() {
+        var bus = EventBus.create();
+
+        var listeners = PrioritizedListeners.create();
+
+        bus.subscribeAll(Key.random(), listeners);
+        bus.callEvent(new SampleEvent());
+
+        Assertions.assertArrayEquals(new int[]{1, 2, 3, 4, 5}, listeners.getResult());
+    }
+
+    @Test
     void testClosing() {
         var bus = EventBus.create();
         var subscriber = bus.getSubscriber(SampleEvent.class);
@@ -202,6 +257,8 @@ public class EventBusTest {
         Assertions.assertTrue(subscriber.isClosed());
 
         Assertions.assertThrows(IllegalStateException.class, () -> bus.getSubscriber(Event.class));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.subscribeAll(Key.random(), DummyMultipleListeners.create()));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(DummyMultipleListeners.create()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(Key.random()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeIf(l -> true));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.callEvent(new SampleEvent()));
@@ -223,7 +280,10 @@ public class EventBusTest {
         var bus = EventBus.create();
 
         Assertions.assertThrows(NullPointerException.class, () -> bus.getSubscriber(null));
-        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll(null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(Key.random(), null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((MultipleListeners) null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((Key) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeIf(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEvent(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEventAsync(null));
@@ -232,5 +292,9 @@ public class EventBusTest {
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEventAsync(null, (Function<Supplier<Event>, CompletableFuture<Event>>) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.addResultConsumer(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.removeResultConsumer(null));
+    }
+
+    private int getNumberOfListeners(@NotNull EventBus<?> bus) {
+        return bus.getSubscribers().stream().map(EventSubscriber::getSubscribedListeners).mapToInt(List::size).sum();
     }
 }

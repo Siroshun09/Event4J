@@ -22,24 +22,25 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.test.bus;
+package com.github.siroshun09.event4j.test.sample.listener;
 
-import com.github.siroshun09.event4j.bus.SubscribedListener;
 import com.github.siroshun09.event4j.event.Event;
-import com.github.siroshun09.event4j.key.Key;
-import com.github.siroshun09.event4j.test.sample.listener.DummyListener;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.github.siroshun09.event4j.listener.MultipleListeners;
+import com.github.siroshun09.event4j.listener.Subscribe;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-public class SubscribedListenerTest {
+public class DummyMultipleListeners implements MultipleListeners {
 
-    @SuppressWarnings("ConstantConditions")
-    @Test
-    void testIllegalArguments() {
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(null, null, null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, null, null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, Key.random(), null, null));
-        Assertions.assertThrows(NullPointerException.class, () -> new SubscribedListener<>(Event.class, Key.random(), DummyListener.create(), null));
+    @Contract(value = " -> new", pure = true)
+    public static @NotNull DummyMultipleListeners create() {
+        return new DummyMultipleListeners();
     }
 
+    private DummyMultipleListeners() {
+    }
+
+    @Subscribe
+    public void onEvent(@NotNull Event event) {
+    }
 }
