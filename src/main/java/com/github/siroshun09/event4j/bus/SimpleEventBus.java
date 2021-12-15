@@ -29,7 +29,6 @@ import com.github.siroshun09.event4j.listener.MultipleListeners;
 import com.github.siroshun09.event4j.listener.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +38,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -87,8 +85,8 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     @Override
-    public @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers() {
-        return Set.copyOf(subscriberMap.values());
+    public @NotNull @UnmodifiableView Collection<EventSubscriber<?>> getSubscribers() {
+        return Collections.unmodifiableCollection(subscriberMap.values());
     }
 
     @Override

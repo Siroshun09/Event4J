@@ -125,7 +125,7 @@ public interface EventBus<E> {
      *
      * @return the collection of subscribed {@link EventSubscriber}s
      */
-    @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers();
+    @NotNull @UnmodifiableView Collection<EventSubscriber<?>> getSubscribers();
 
     /**
      * Subscribes multiple listeners.
