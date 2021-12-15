@@ -27,11 +27,14 @@ package com.github.siroshun09.event4j.bus;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
 import com.github.siroshun09.event4j.listener.Listener;
+import com.github.siroshun09.event4j.listener.MultipleListeners;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
@@ -125,6 +128,29 @@ public interface EventBus<E> {
     @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers();
 
     /**
+     * Subscribes multiple listeners.
+     *
+     * @param key       the key that subscribed listeners
+     * @param listeners the {@link MultipleListeners} to subscribe
+     * @throws IllegalStateException if this event bus is already closed
+     * @throws IllegalStateException the {@link MultipleListeners} is already subscribed
+     * @return the subscribed listeners
+     * @see MultipleListeners
+     */
+    @NotNull @UnmodifiableView List<SubscribedListener<?>> subscribeAll(@NotNull Key key,
+                                                                        @NotNull MultipleListeners listeners);
+
+    /**
+     * Unsubscribes multiple listeners.
+     *
+     * @param listeners the {@link MultipleListeners} to unsubscribe
+     * @throws IllegalStateException if this event bus is already closed
+     * @throws IllegalStateException the {@link MultipleListeners} is not subscribed
+     * @see MultipleListeners
+     */
+    void unsubscribeAll(@NotNull MultipleListeners listeners);
+
+    /**
      * Unsubscribes all listeners subscribed with the specified {@link Key} for this event bus instance.
      *
      * @param key the key that subscribed listeners
@@ -214,8 +240,8 @@ public interface EventBus<E> {
      * Adds the {@link Consumer} to consume {@link PostResult}.
      *
      * @param consumer the {@link Consumer} to add
-     * @throws IllegalStateException if this event bus is already closed
      * @return if the consumer has been added to this event bus, returns {@code true}, otherwise {@code false}
+     * @throws IllegalStateException if this event bus is already closed
      */
     @SuppressWarnings("UnusedReturnValue")
     boolean addResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
@@ -224,8 +250,8 @@ public interface EventBus<E> {
      * Removes the {@link Consumer} to consume {@link PostResult}.
      *
      * @param consumer the {@link Consumer} to remove
-     * @throws IllegalStateException if this event bus is already closed
      * @return if the consumer has been removed from this event bus, returns {@code true}, otherwise {@code false}
+     * @throws IllegalStateException if this event bus is already closed
      */
     @SuppressWarnings("UnusedReturnValue")
     boolean removeResultConsumer(@NotNull Consumer<PostResult<?>> consumer);

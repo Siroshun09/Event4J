@@ -25,11 +25,17 @@
 package com.github.siroshun09.event4j.bus;
 
 import com.github.siroshun09.event4j.key.Key;
+import com.github.siroshun09.event4j.listener.MultipleListeners;
+import com.github.siroshun09.event4j.listener.Subscribe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +53,7 @@ import java.util.function.Supplier;
 class SimpleEventBus<E> implements EventBus<E> {
 
     private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
+    private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
 
     private final Class<E> eventClass;
@@ -82,6 +89,82 @@ class SimpleEventBus<E> implements EventBus<E> {
     @Override
     public @NotNull @Unmodifiable Collection<EventSubscriber<?>> getSubscribers() {
         return Set.copyOf(subscriberMap.values());
+    }
+
+    @Override
+    public @NotNull @UnmodifiableView List<SubscribedListener<?>> subscribeAll(@NotNull Key key,
+                                                                               @NotNull MultipleListeners listeners) {
+        Objects.requireNonNull(key);
+        Objects.requireNonNull(listeners);
+        checkClosed();
+
+        if (subscribedMultipleListeners.containsKey(listeners)) {
+            throw new IllegalStateException(listeners + " is already subscribed.");
+        }
+
+        for (var method : listeners.getClass().getMethods()) {
+            if (method.isBridge() || method.isSynthetic() || method.isVarArgs()) {
+                continue;
+            }
+
+            var annotation = method.getAnnotation(Subscribe.class);
+            var args = method.getParameterTypes();
+
+            if (annotation == null || args.length != 1) {
+                continue;
+            }
+
+            var clazz = args[0];
+
+            if (!eventClass.isAssignableFrom(clazz)) {
+                continue;
+            }
+
+            var subscriber = getSubscriber(clazz.asSubclass(eventClass));
+
+            method.setAccessible(true);
+
+            var subscribed = subscriber.subscribe(
+                    key,
+                    event -> {
+                        try {
+                            method.invoke(listeners, event);
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                    },
+                    annotation.priority()
+            );
+
+            subscribedMultipleListeners.computeIfAbsent(listeners, k -> new ArrayList<>()).add(subscribed);
+        }
+
+        var subscribedListeners = subscribedMultipleListeners.get(listeners);
+
+        return subscribedListeners != null ?
+                Collections.unmodifiableList(subscribedListeners) :
+                Collections.emptyList();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void unsubscribeAll(@NotNull MultipleListeners listeners) {
+        Objects.requireNonNull(listeners);
+        checkClosed();
+
+        var subscribedListeners = subscribedMultipleListeners.remove(listeners);
+
+        if (subscribedListeners == null) {
+            throw new IllegalStateException(listeners + " is not subscribed");
+        }
+
+        for (var listener : subscribedListeners) {
+            var subscriber = (EventSubscriber) subscriberMap.get(listener.eventClass());
+
+            if (subscriber != null) {
+                subscriber.unsubscribe(listener);
+            }
+        }
     }
 
     @Override
