@@ -32,29 +32,54 @@ import org.jetbrains.annotations.NotNull;
 public interface Priority extends Comparable<Priority> {
 
     /**
+     * the value of {@link #LOWEST}.
+     */
+    int LOWEST_VALUE = -128;
+
+    /**
+     * the value of {@link #LOW}.
+     */
+    int LOW_VALUE = -64;
+
+    /**
+     * the value of {@link #NORMAL}.
+     */
+    int NORMAL_VALUE = 0;
+
+    /**
+     * the value of {@link #HIGH}.
+     */
+    int HIGH_VALUE = 64;
+
+    /**
+     * the value of {@link #HIGHEST}.
+     */
+    int HIGHEST_VALUE = 128;
+
+    /**
      * Priority value: -128
      */
-    Priority LOWEST = value(-128);
+    Priority LOWEST = new PriorityImpl(LOWEST_VALUE);
 
     /**
      * Priority value: -64
      */
-    Priority LOW = value(-64);
+    Priority LOW = new PriorityImpl(LOW_VALUE);
 
     /**
      * Priority value: 0
      */
-    Priority NORMAL = value(0);
+    Priority NORMAL = new PriorityImpl(NORMAL_VALUE);
 
     /**
      * Priority value: 64
      */
-    Priority HIGH = value(64);
+    Priority HIGH = new PriorityImpl(Priority.HIGH_VALUE);
 
     /**
      * Priority value: 128
      */
-    Priority HIGHEST = value(128);
+    Priority HIGHEST = new PriorityImpl(Priority.HIGHEST_VALUE);
 
     /**
      * Creates a new priority.
@@ -63,7 +88,14 @@ public interface Priority extends Comparable<Priority> {
      * @return the priority
      */
     static @NotNull Priority value(int value) {
-        return new PriorityImpl(value);
+        return switch (value) {
+            case LOWEST_VALUE -> LOWEST;
+            case LOW_VALUE -> LOW;
+            case NORMAL_VALUE -> NORMAL;
+            case HIGH_VALUE -> HIGH;
+            case HIGHEST_VALUE -> HIGHEST;
+            default -> new PriorityImpl(value);
+        };
     }
 
     /**
