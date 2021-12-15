@@ -104,7 +104,7 @@ class SimpleEventSubscriber<E> implements EventSubscriber<E> {
         Objects.requireNonNull(priority);
         checkClosed();
 
-        var subscription = new SubscribedListener<>(key, listener, priority);
+        var subscription = new SubscribedListener<>(eventClass, key, listener, priority);
 
         subscribedListeners.add(subscription);
         sortListeners();
