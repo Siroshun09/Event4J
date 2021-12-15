@@ -30,7 +30,6 @@ import com.github.siroshun09.event4j.listener.Listener;
 import com.github.siroshun09.event4j.listener.MultipleListeners;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.Collection;

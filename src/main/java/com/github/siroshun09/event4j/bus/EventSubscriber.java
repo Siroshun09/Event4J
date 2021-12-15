@@ -28,7 +28,6 @@ import com.github.siroshun09.event4j.key.Key;
 import com.github.siroshun09.event4j.listener.Listener;
 import com.github.siroshun09.event4j.priority.Priority;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.List;
