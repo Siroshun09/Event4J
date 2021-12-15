@@ -31,12 +31,12 @@ package com.github.siroshun09.event4j.listener;
  *
  * <pre>{@code
  *     public class SampleListeners implements MultipleListeners {
- *         &#064;Subscribe
+ *         @Subscribe
  *         public void onEventNormal(@NotNull Event event) {
  *             // do something
  *         }
  *
- *         &#064;Subscribe(priority = Priority.HIGH_VALUE)
+ *         @Subscribe(priority = Priority.HIGH_VALUE)
  *         public void onEventHigh(@NotNull Event event) {
  *             // do something
  *         }
