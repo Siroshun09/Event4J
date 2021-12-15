@@ -113,6 +113,11 @@ class SimpleEventSubscriber<E> implements EventSubscriber<E> {
     }
 
     @Override
+    public @NotNull SubscribedListener<E> subscribe(@NotNull Key key, @NotNull Listener<E> listener, int priorityValue) {
+        return subscribe(key, listener, Priority.value(priorityValue));
+    }
+
+    @Override
     public boolean unsubscribe(@NotNull SubscribedListener<E> subscribedListener) {
         Objects.requireNonNull(subscribedListener);
         checkClosed();

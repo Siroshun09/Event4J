@@ -79,6 +79,17 @@ public interface EventSubscriber<E> {
     @NotNull SubscribedListener<E> subscribe(@NotNull Key key, @NotNull Listener<E> listener, @NotNull Priority priority);
 
     /**
+     * Subscribes the new {@link Listener}.
+     *
+     * @param key      the key
+     * @param listener the {@link Listener} to subscribe
+     * @param priorityValue the priority value of the {@link Listener}
+     * @return the {@link SubscribedListener}
+     * @throws IllegalStateException if this subscriber is already closed
+     */
+    @NotNull SubscribedListener<E> subscribe(@NotNull Key key, @NotNull Listener<E> listener, int priorityValue);
+
+    /**
      * Unsubscribes the specified {@link SubscribedListener}.
      *
      * @param subscribedListener the {@link SubscribedListener} to unsubscribe
