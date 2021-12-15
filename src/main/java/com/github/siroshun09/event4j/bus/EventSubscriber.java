@@ -29,6 +29,7 @@ import com.github.siroshun09.event4j.listener.Listener;
 import com.github.siroshun09.event4j.priority.Priority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -121,7 +122,7 @@ public interface EventSubscriber<E> {
      *
      * @return the list of subscribed listeners.
      */
-    @NotNull @Unmodifiable List<SubscribedListener<E>> getSubscribedListeners();
+    @NotNull @UnmodifiableView List<SubscribedListener<E>> getSubscribedListeners();
 
     /**
      * Checks if this subscriber is closed.
