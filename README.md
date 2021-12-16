@@ -20,7 +20,7 @@ Event4J is the simple event library for Java.
     <dependency>
         <groupId>com.github.siroshun09.event4j</groupId>
         <artifactId>event4j</artifactId>
-        <version>2.2.0</version>
+        <version>3.0.0</version>
     </dependency>
 ```
 
@@ -28,7 +28,7 @@ Event4J is the simple event library for Java.
 
 ```
     dependencies {
-        compile 'com.github.siroshun09.event4j:event4j:2.2.0'
+        compile 'com.github.siroshun09.event4j:event4j:3.0.0'
     }
 ```
 
