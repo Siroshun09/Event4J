@@ -42,9 +42,9 @@ import java.util.function.Predicate;
 
 class SimpleEventSubscriber<E> implements EventSubscriber<E> {
 
+    private final Class<E> eventClass;
     private final List<SubscribedListener<E>> subscribedListeners = new CopyOnWriteArrayList<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private final Class<E> eventClass;
 
     private List<SubscribedListener<E>> sortedListeners = Collections.emptyList();
 
@@ -165,6 +165,15 @@ class SimpleEventSubscriber<E> implements EventSubscriber<E> {
     @Override
     public boolean isClosed() {
         return closed.get();
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleEventSubscriber{" +
+                "eventClass=" + eventClass +
+                ", subscribedListeners=" + subscribedListeners +
+                ", closed=" + closed +
+                '}';
     }
 
     private void sortListeners() {

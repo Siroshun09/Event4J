@@ -50,13 +50,12 @@ import java.util.function.Supplier;
 
 class SimpleEventBus<E> implements EventBus<E> {
 
-    private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
-    private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
-    private final AtomicBoolean closed = new AtomicBoolean(false);
-
     private final Class<E> eventClass;
     private final Executor asyncExecutor;
 
+    private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
+    private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
+    private final AtomicBoolean closed = new AtomicBoolean(false);
     private final List<Consumer<PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
 
     SimpleEventBus(@NotNull Class<E> eventClass, @NotNull Executor asyncExecutor) {
@@ -242,6 +241,15 @@ class SimpleEventBus<E> implements EventBus<E> {
         checkClosed();
 
         return resultConsumers.remove(consumer);
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleEventBus{" +
+                "eventClass=" + eventClass +
+                ", subscriberMap=" + subscriberMap +
+                ", closed=" + closed +
+                '}';
     }
 
     @SuppressWarnings("unchecked")
