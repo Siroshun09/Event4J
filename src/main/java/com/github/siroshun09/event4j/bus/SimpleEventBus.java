@@ -267,22 +267,14 @@ class SimpleEventBus<E> implements EventBus<E> {
     private <T extends E> @NotNull T postEventToSubscribers(@NotNull T event) {
         var eventSubscriber = getSubscriberOrNull((Class<T>) event.getClass());
 
-        if (eventSubscriber != null) {
-            consumeResult(eventSubscriber.post(event));
-        } else {
-            consumeResult(() -> PostResult.success(event));
-        }
+        consumeResult(event, eventSubscriber != null ? eventSubscriber.post(event) : null);
 
         Class<?> clazz = event.getClass().getSuperclass();
 
         while (clazz != null && eventClass.isAssignableFrom(clazz)) {
             var subscriber = (EventSubscriber) getSubscriberOrNull((Class) clazz);
 
-            if (subscriber != null) {
-                consumeResult(subscriber.post(event));
-            } else {
-                consumeResult(() -> PostResult.success(event));
-            }
+            consumeResult(event, subscriber != null ? subscriber.post(event) : null);
 
             clazz = clazz.getSuperclass();
         }
@@ -290,26 +282,14 @@ class SimpleEventBus<E> implements EventBus<E> {
         return event;
     }
 
-    private void consumeResult(@Nullable PostResult<?> result) {
+    private void consumeResult(@NotNull Object event, @Nullable PostResult<?> result) {
         if (resultConsumers.isEmpty()) {
             return;
         }
 
-        if (1 < resultConsumers.size()) {
-            for (var consumer : resultConsumers) {
-                consumer.accept(result);
-            }
-        } else {
-            resultConsumers.get(0).accept(result);
+        if (result == null) {
+            result = PostResult.success(event);
         }
-    }
-
-    private void consumeResult(@NotNull Supplier<PostResult<?>> resultSupplier) {
-        if (resultConsumers.isEmpty()) {
-            return;
-        }
-
-        var result = resultSupplier.get();
 
         if (1 < resultConsumers.size()) {
             for (var consumer : resultConsumers) {
