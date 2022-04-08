@@ -15,7 +15,7 @@ jobs:
       project-version: ${{ github.event.release.tag_name }}
       artifact-name: Javadoc
   update-latest-javadoc:
-    needs: [ generate-javadoc ]
+    needs: [ generate-javadoc, deploy-javadoc ]
     uses: Siroshun09/gh-actions-workflows/.github/workflows/deploy-to-gh-pages.yml@v1
     with:
       project-version: latest
