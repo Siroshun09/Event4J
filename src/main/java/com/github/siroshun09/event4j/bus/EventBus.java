@@ -243,7 +243,7 @@ public interface EventBus<E> {
      * @throws IllegalStateException if this event bus is already closed
      */
     @SuppressWarnings("UnusedReturnValue")
-    boolean addResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
+    boolean addResultConsumer(@NotNull Consumer<@NotNull PostResult<?>> consumer);
 
     /**
      * Removes the {@link Consumer} to consume {@link PostResult}.
@@ -253,5 +253,5 @@ public interface EventBus<E> {
      * @throws IllegalStateException if this event bus is already closed
      */
     @SuppressWarnings("UnusedReturnValue")
-    boolean removeResultConsumer(@NotNull Consumer<PostResult<?>> consumer);
+    boolean removeResultConsumer(@NotNull Consumer<@NotNull PostResult<?>> consumer);
 }

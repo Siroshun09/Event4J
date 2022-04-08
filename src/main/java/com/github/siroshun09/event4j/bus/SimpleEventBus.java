@@ -56,7 +56,7 @@ class SimpleEventBus<E> implements EventBus<E> {
     private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
     private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
-    private final List<Consumer<PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
+    private final List<Consumer<@NotNull PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
 
     SimpleEventBus(@NotNull Class<E> eventClass, @NotNull Executor asyncExecutor) {
         this.eventClass = Objects.requireNonNull(eventClass);
@@ -228,7 +228,7 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     @Override
-    public boolean addResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
+    public boolean addResultConsumer(@NotNull Consumer<@NotNull PostResult<?>> consumer) {
         Objects.requireNonNull(consumer);
         checkClosed();
 
@@ -236,7 +236,7 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     @Override
-    public boolean removeResultConsumer(@NotNull Consumer<PostResult<?>> consumer) {
+    public boolean removeResultConsumer(@NotNull Consumer<@NotNull PostResult<?>> consumer) {
         Objects.requireNonNull(consumer);
         checkClosed();
 
