@@ -28,11 +28,20 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface to set the listener's priority.
+ * <p>
+ * {@link Priority} is used to determine the order of listener calls.
+ * <p>
+ * {@link Priority} is compared by {@link Integer#compare(int, int)}.
+ * The smaller value, the {@link com.github.siroshun09.event4j.listener.Listener} is called earlier;
+ * the larger value, it is called later.
+ * For the same value, it is not defined which is called first.
  */
 public interface Priority extends Comparable<Priority> {
 
     /**
      * the value of {@link #LOWEST}.
+     * <p>
+     * This is <b>NOT</b> the minimum numeric value that {@link Priority#value(int)} will accept.
      */
     int LOWEST_VALUE = -128;
 
@@ -53,6 +62,8 @@ public interface Priority extends Comparable<Priority> {
 
     /**
      * the value of {@link #HIGHEST}.
+     * <p>
+     * This is <b>NOT</b> the maximum numeric value that {@link Priority#value(int)} will accept.
      */
     int HIGHEST_VALUE = 128;
 
