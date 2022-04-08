@@ -1,7 +1,9 @@
 name: Deploy Javadoc to GitHub Pages (Maven)
 on:
-  release:
-    types: [ published ]
+  push:
+    branches: [ master ]
+#  release:
+#    types: [ published ]
 
 jobs:
   generate-javadoc:
