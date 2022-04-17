@@ -27,14 +27,17 @@ package com.github.siroshun09.event4j.test.bus;
 import com.github.siroshun09.event4j.bus.EventBus;
 import com.github.siroshun09.event4j.bus.EventSubscriber;
 import com.github.siroshun09.event4j.bus.PostResult;
+import com.github.siroshun09.event4j.bus.SubscribedListener;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
 import com.github.siroshun09.event4j.listener.MultipleListeners;
+import com.github.siroshun09.event4j.priority.Priority;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent2;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent3;
 import com.github.siroshun09.event4j.test.sample.listener.CountingListener;
 import com.github.siroshun09.event4j.test.sample.listener.CountingMultipleListeners;
+import com.github.siroshun09.event4j.test.sample.listener.DummyListener;
 import com.github.siroshun09.event4j.test.sample.listener.DummyMultipleListeners;
 import com.github.siroshun09.event4j.test.sample.listener.PrioritizedListeners;
 import com.github.siroshun09.event4j.test.sample.listener.ThrowingListener;
@@ -42,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -231,6 +235,42 @@ public class EventBusTest {
     }
 
     @Test
+    void testUnsubscribe() {
+        var bus = EventBus.create();
+
+        var subscribed = bus.getSubscriber(SampleEvent.class).subscribe(Key.random(), DummyListener.create());
+
+        Assertions.assertEquals(1, getNumberOfListeners(bus));
+
+        bus.unsubscribe(subscribed);
+
+        Assertions.assertEquals(0, getNumberOfListeners(bus));
+    }
+
+    @Test
+    void testUnsubscribeAll() {
+        var bus = EventBus.create();
+
+        var subscribed = bus.subscribeAll(Key.random(), DummyMultipleListeners.create());
+
+        Assertions.assertEquals(3, getNumberOfListeners(bus));
+
+        bus.unsubscribeAll(subscribed);
+
+        Assertions.assertEquals(0, getNumberOfListeners(bus));
+
+        var key = Key.random();
+
+        bus.subscribeAll(key, DummyMultipleListeners.create());
+
+        Assertions.assertEquals(3, getNumberOfListeners(bus));
+
+        bus.unsubscribeAll(key);
+
+        Assertions.assertEquals(0, getNumberOfListeners(bus));
+    }
+
+    @Test
     void testPrioritizedListeners() {
         var bus = EventBus.create();
 
@@ -258,7 +298,9 @@ public class EventBusTest {
 
         Assertions.assertThrows(IllegalStateException.class, () -> bus.getSubscriber(Event.class));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.subscribeAll(Key.random(), DummyMultipleListeners.create()));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribe(new SubscribedListener<>(Event.class, Key.random(), DummyListener.create(), Priority.NORMAL)));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(DummyMultipleListeners.create()));
+        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(Collections.emptyList()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(Key.random()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeIf(l -> true));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.callEvent(new SampleEvent()));
@@ -280,9 +322,11 @@ public class EventBusTest {
         var bus = EventBus.create();
 
         Assertions.assertThrows(NullPointerException.class, () -> bus.getSubscriber(null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribe(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(null, null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(Key.random(), null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((MultipleListeners) null));
+        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((List<SubscribedListener<?>>) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((Key) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeIf(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.callEvent(null));

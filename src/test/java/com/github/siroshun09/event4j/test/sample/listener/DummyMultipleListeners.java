@@ -27,6 +27,8 @@ package com.github.siroshun09.event4j.test.sample.listener;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.listener.MultipleListeners;
 import com.github.siroshun09.event4j.listener.Subscribe;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
+import com.github.siroshun09.event4j.test.sample.event.SampleEvent2;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,5 +44,13 @@ public class DummyMultipleListeners implements MultipleListeners {
 
     @Subscribe
     public void onEvent(@NotNull Event event) {
+    }
+
+    @Subscribe
+    public void onSampleEvent(@NotNull SampleEvent event) {
+    }
+
+    @Subscribe
+    public void onSampleEvent2(@NotNull SampleEvent2 event2) {
     }
 }
