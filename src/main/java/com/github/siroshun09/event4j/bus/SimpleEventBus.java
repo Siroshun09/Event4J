@@ -54,6 +54,8 @@ class SimpleEventBus<E> implements EventBus<E> {
     private final Executor asyncExecutor;
 
     private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
+
+    @Deprecated
     private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final List<Consumer<@NotNull PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();

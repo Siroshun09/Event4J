@@ -166,7 +166,10 @@ public interface EventBus<E> {
      * @throws IllegalStateException if this event bus is already closed
      * @throws IllegalStateException the {@link MultipleListeners} is not subscribed
      * @see MultipleListeners
+     * @deprecated will be removed in 3.2.0, use other methods to unsubscribe (such as
+     * {@link #unsubscribe(SubscribedListener)}, {@link #unsubscribeAll(List)} or {@link #unsubscribeAll(Key)})
      */
+    @Deprecated(since = "3.1.0", forRemoval = true)
     void unsubscribeAll(@NotNull MultipleListeners listeners);
 
     /**
