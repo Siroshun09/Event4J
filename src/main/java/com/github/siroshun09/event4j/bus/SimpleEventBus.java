@@ -165,6 +165,33 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     @Override
+    public <T extends E> boolean unsubscribe(@NotNull SubscribedListener<T> subscribedListener) {
+        Objects.requireNonNull(subscribedListener);
+        checkClosed();
+
+        return getSubscriber(subscribedListener.eventClass()).unsubscribe(subscribedListener);
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void unsubscribeAll(@NotNull List<SubscribedListener<?>> subscribedListeners) {
+        Objects.requireNonNull(subscribedListeners);
+        checkClosed();
+
+        for (var listener : subscribedListeners) {
+            if (!eventClass.isAssignableFrom(listener.eventClass())) {
+                continue;
+            }
+
+            var subscriber = getSubscriberOrNull((Class) listener.eventClass());
+
+            if (subscriber != null) {
+                subscriber.unsubscribe(listener);
+            }
+        }
+    }
+
+    @Override
     public void unsubscribeAll(@NotNull Key key) {
         Objects.requireNonNull(key);
         checkClosed();

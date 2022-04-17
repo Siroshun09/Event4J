@@ -140,6 +140,26 @@ public interface EventBus<E> {
                                                                         @NotNull MultipleListeners listeners);
 
     /**
+     * Unsubscribes the listener.
+     *
+     * @param subscribedListener the {@link SubscribedListener} to unsubscribe
+     * @param <T>                the type of event
+     * @return if the listener has been unsubscribed, returns {@code true}, otherwise {@code false}
+     * @see EventSubscriber#unsubscribe(SubscribedListener)
+     */
+    <T extends E> boolean unsubscribe(@NotNull SubscribedListener<T> subscribedListener);
+
+    /**
+     * Unsubscribes the listeners.
+     * <p>
+     * This method attempts to unsubscribe with {@link EventSubscriber#unsubscribe(SubscribedListener)}
+     * if the event class of the {@link SubscribedListener} is appropriate.
+     *
+     * @param subscribedListeners the listeners to unsubscribe
+     */
+    void unsubscribeAll(@NotNull List<SubscribedListener<?>> subscribedListeners);
+
+    /**
      * Unsubscribes multiple listeners.
      *
      * @param listeners the {@link MultipleListeners} to unsubscribe
