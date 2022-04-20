@@ -171,7 +171,9 @@ class SimpleEventBus<E> implements EventBus<E> {
         Objects.requireNonNull(subscribedListener);
         checkClosed();
 
-        return getSubscriber(subscribedListener.eventClass()).unsubscribe(subscribedListener);
+        var subscriber = getSubscriberOrNull(subscribedListener.eventClass());
+
+        return subscriber != null && subscriber.unsubscribe(subscribedListener);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
