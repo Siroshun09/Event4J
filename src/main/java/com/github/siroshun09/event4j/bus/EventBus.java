@@ -133,7 +133,6 @@ public interface EventBus<E> {
      * @param listeners the {@link MultipleListeners} to subscribe
      * @return the subscribed listeners
      * @throws IllegalStateException if this event bus is already closed
-     * @throws IllegalStateException the {@link MultipleListeners} is already subscribed
      * @see MultipleListeners
      */
     @NotNull @UnmodifiableView List<SubscribedListener<?>> subscribeAll(@NotNull Key key,

@@ -212,7 +212,6 @@ public class EventBusTest {
 
         Assertions.assertDoesNotThrow(() -> bus.subscribeAll(Key.random(), DummyMultipleListeners.create()));
         Assertions.assertDoesNotThrow(() -> bus.subscribeAll(Key.random(), CountingMultipleListeners.create(counter)));
-        Assertions.assertThrows(IllegalStateException.class, () -> bus.subscribeAll(Key.random(), listeners));
     }
 
     @Test

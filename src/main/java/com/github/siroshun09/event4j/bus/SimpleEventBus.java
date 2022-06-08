@@ -55,8 +55,6 @@ class SimpleEventBus<E> implements EventBus<E> {
 
     private final Map<Class<?>, SimpleEventSubscriber<?>> subscriberMap = new ConcurrentHashMap<>();
 
-    @Deprecated
-    private final Map<MultipleListeners, List<SubscribedListener<?>>> subscribedMultipleListeners = new ConcurrentHashMap<>();
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final List<Consumer<@NotNull PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
 
@@ -97,9 +95,7 @@ class SimpleEventBus<E> implements EventBus<E> {
         Objects.requireNonNull(listeners);
         checkClosed();
 
-        if (subscribedMultipleListeners.containsKey(listeners)) {
-            throw new IllegalStateException(listeners + " is already subscribed.");
-        }
+        var subscribedListeners = new ArrayList<SubscribedListener<?>>();
 
         for (var method : listeners.getClass().getMethods()) {
             if (method.isBridge() || method.isSynthetic() || method.isVarArgs()) {
@@ -135,14 +131,10 @@ class SimpleEventBus<E> implements EventBus<E> {
                     annotation.priority()
             );
 
-            subscribedMultipleListeners.computeIfAbsent(listeners, k -> new ArrayList<>()).add(subscribed);
+            subscribedListeners.add(subscribed);
         }
 
-        var subscribedListeners = subscribedMultipleListeners.get(listeners);
-
-        return subscribedListeners != null ?
-                Collections.unmodifiableList(subscribedListeners) :
-                Collections.emptyList();
+        return Collections.unmodifiableList(subscribedListeners);
     }
 
     @Override
