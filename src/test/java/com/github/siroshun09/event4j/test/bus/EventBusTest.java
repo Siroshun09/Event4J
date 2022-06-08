@@ -30,7 +30,6 @@ import com.github.siroshun09.event4j.bus.PostResult;
 import com.github.siroshun09.event4j.bus.SubscribedListener;
 import com.github.siroshun09.event4j.event.Event;
 import com.github.siroshun09.event4j.key.Key;
-import com.github.siroshun09.event4j.listener.MultipleListeners;
 import com.github.siroshun09.event4j.priority.Priority;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent;
 import com.github.siroshun09.event4j.test.sample.event.SampleEvent2;
@@ -223,15 +222,13 @@ public class EventBusTest {
 
         var listeners = CountingMultipleListeners.create(counter);
 
-        bus.subscribeAll(Key.random(), listeners);
+        var subscribedListeners = bus.subscribeAll(Key.random(), listeners);
 
         Assertions.assertEquals(3, getNumberOfListeners(bus));
 
-        bus.unsubscribeAll(listeners);
+        bus.unsubscribeAll(subscribedListeners);
 
         Assertions.assertEquals(0, getNumberOfListeners(bus));
-
-        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(DummyMultipleListeners.create()));
     }
 
     @Test
@@ -299,7 +296,6 @@ public class EventBusTest {
         Assertions.assertThrows(IllegalStateException.class, () -> bus.getSubscriber(Event.class));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.subscribeAll(Key.random(), DummyMultipleListeners.create()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribe(new SubscribedListener<>(Event.class, Key.random(), DummyListener.create(), Priority.NORMAL)));
-        Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(DummyMultipleListeners.create()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(Collections.emptyList()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeAll(Key.random()));
         Assertions.assertThrows(IllegalStateException.class, () -> bus.unsubscribeIf(l -> true));
@@ -325,7 +321,6 @@ public class EventBusTest {
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribe(null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(null, null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.subscribeAll(Key.random(), null));
-        Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((MultipleListeners) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((List<SubscribedListener<?>>) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeAll((Key) null));
         Assertions.assertThrows(NullPointerException.class, () -> bus.unsubscribeIf(null));

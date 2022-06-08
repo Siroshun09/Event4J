@@ -160,19 +160,6 @@ public interface EventBus<E> {
     void unsubscribeAll(@NotNull List<SubscribedListener<?>> subscribedListeners);
 
     /**
-     * Unsubscribes multiple listeners.
-     *
-     * @param listeners the {@link MultipleListeners} to unsubscribe
-     * @throws IllegalStateException if this event bus is already closed
-     * @throws IllegalStateException the {@link MultipleListeners} is not subscribed
-     * @see MultipleListeners
-     * @deprecated will be removed in 3.2.0, use other methods to unsubscribe (such as
-     * {@link #unsubscribe(SubscribedListener)}, {@link #unsubscribeAll(List)} or {@link #unsubscribeAll(Key)})
-     */
-    @Deprecated(since = "3.1.0", forRemoval = true)
-    void unsubscribeAll(@NotNull MultipleListeners listeners);
-
-    /**
      * Unsubscribes all listeners subscribed with the specified {@link Key} for this event bus instance.
      *
      * @param key the key that subscribed listeners

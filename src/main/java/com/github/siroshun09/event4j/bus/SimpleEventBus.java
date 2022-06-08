@@ -145,27 +145,6 @@ class SimpleEventBus<E> implements EventBus<E> {
                 Collections.emptyList();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public void unsubscribeAll(@NotNull MultipleListeners listeners) {
-        Objects.requireNonNull(listeners);
-        checkClosed();
-
-        var subscribedListeners = subscribedMultipleListeners.remove(listeners);
-
-        if (subscribedListeners == null) {
-            throw new IllegalStateException(listeners + " is not subscribed");
-        }
-
-        for (var listener : subscribedListeners) {
-            var subscriber = (EventSubscriber) subscriberMap.get(listener.eventClass());
-
-            if (subscriber != null) {
-                subscriber.unsubscribe(listener);
-            }
-        }
-    }
-
     @Override
     public <T extends E> boolean unsubscribe(@NotNull SubscribedListener<T> subscribedListener) {
         Objects.requireNonNull(subscribedListener);
