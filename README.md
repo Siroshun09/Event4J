@@ -1,6 +1,6 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.event4j/event4j)
 ![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.event4j/event4j?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Siroshun09/Event4J/Maven)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/Event4J/maven-java17.yml?branch=master)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/Event4J)
 [![Javadoc](https://img.shields.io/badge/javadoc-page-orange)](https://siroshun09.github.io/Event4J/latest)
 
@@ -46,4 +46,4 @@ Javadoc: https://siroshun09.github.io/Event4J/latest
 
 This project is under the MIT license. Please see [LICENSE](LICENSE) for more info.
 
-Copyright © 2020-2022, Siroshun09
+Copyright © 2020-2023, Siroshun09
