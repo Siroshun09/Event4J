@@ -248,7 +248,7 @@ public interface EventBus<E> {
      * Adds the {@link Consumer} to consume {@link PostResult}.
      *
      * @param consumer the {@link Consumer} to add
-     * @return if the consumer has been added to this event bus, returns {@code true}, otherwise {@code false}
+     * @return if the consumer has been added to this event bus, returns {@code true}, otherwise {@code false} (default implementation: always {@code true})
      * @throws IllegalStateException if this event bus is already closed
      */
     @SuppressWarnings("UnusedReturnValue")
