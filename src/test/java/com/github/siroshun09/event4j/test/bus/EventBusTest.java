@@ -238,7 +238,7 @@ public class EventBusTest {
 
         Assertions.assertEquals(1, getNumberOfListeners(bus));
 
-        Assertions.assertFalse(bus.unsubscribe(subscribed));
+        Assertions.assertTrue(bus.unsubscribe(subscribed));
 
         Assertions.assertEquals(0, getNumberOfListeners(bus));
     }
