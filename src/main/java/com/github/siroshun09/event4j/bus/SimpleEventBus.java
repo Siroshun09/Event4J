@@ -58,6 +58,8 @@ class SimpleEventBus<E> implements EventBus<E> {
     private final AtomicBoolean closed = new AtomicBoolean(false);
     private final List<Consumer<@NotNull PostResult<?>>> resultConsumers = new CopyOnWriteArrayList<>();
 
+    private @Nullable Consumer<PostResult<?>> resultConsumer = null;
+
     SimpleEventBus(@NotNull Class<E> eventClass, @NotNull Executor asyncExecutor) {
         this.eventClass = Objects.requireNonNull(eventClass);
         this.asyncExecutor = Objects.requireNonNull(asyncExecutor);
@@ -234,7 +236,11 @@ class SimpleEventBus<E> implements EventBus<E> {
         Objects.requireNonNull(consumer);
         checkClosed();
 
-        return resultConsumers.add(consumer);
+        resultConsumers.add(consumer);
+
+        rebuildResultConsumer();
+
+        return true; // List#add returns true
     }
 
     @Override
@@ -242,7 +248,23 @@ class SimpleEventBus<E> implements EventBus<E> {
         Objects.requireNonNull(consumer);
         checkClosed();
 
-        return resultConsumers.remove(consumer);
+        boolean removed = resultConsumers.remove(consumer);
+
+        if (removed) {
+            rebuildResultConsumer();
+        }
+
+        return removed;
+    }
+
+    private void rebuildResultConsumer() {
+        Consumer<PostResult<?>> consumer = null;
+
+        for (var registered : resultConsumers) {
+            consumer = consumer != null ? consumer.andThen(registered) : registered;
+        }
+
+        resultConsumer = consumer;
     }
 
     @Override
@@ -285,20 +307,8 @@ class SimpleEventBus<E> implements EventBus<E> {
     }
 
     private void consumeResult(@NotNull Object event, @Nullable PostResult<?> result) {
-        if (resultConsumers.isEmpty()) {
-            return;
-        }
-
-        if (result == null) {
-            result = PostResult.success(event);
-        }
-
-        if (1 < resultConsumers.size()) {
-            for (var consumer : resultConsumers) {
-                consumer.accept(result);
-            }
-        } else {
-            resultConsumers.get(0).accept(result);
+        if (resultConsumer != null) {
+            resultConsumer.accept(result != null ? result : PostResult.success(event));
         }
     }
 }
