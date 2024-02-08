@@ -1,5 +1,5 @@
 /*
- *     Copyright (c) 2020-2023 Siroshun09
+ *     Copyright (c) 2020-2024 Siroshun09
  *
  *     This file is part of Event4J.
  *
