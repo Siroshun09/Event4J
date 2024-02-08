@@ -24,41 +24,9 @@
 
 package com.github.siroshun09.event4j.shared.event;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
-
-/**
- * The root class of the event.
- */
 public abstract class Event {
 
-    private final String eventName;
-
-    /**
-     * Creates an event without specifying a name.
-     */
-    public Event() {
-        eventName = getClass().getSimpleName();
+    protected Event() {
     }
 
-    /**
-     * Creates a named event.
-     *
-     * @param eventName the name of this event.
-     */
-    public Event(@NotNull String eventName) {
-        Objects.requireNonNull(eventName);
-        this.eventName = eventName;
-    }
-
-    /**
-     * Gets a named event.
-     *
-     * @return the name of this event.
-     */
-    @NotNull
-    public String getEventName() {
-        return eventName;
-    }
 }
