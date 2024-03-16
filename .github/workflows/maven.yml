@@ -8,9 +8,11 @@ jobs:
       java-version: '17'
       package-name: Event4J-Build-${{ github.run_number }}
       upload-artifacts: false
+      upload-test-results: true
   build-java21:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/maven.yml@v1
     with:
       java-version: '21'
       package-name: Event4J-Build-${{ github.run_number }}
       upload-artifacts: false
+      upload-test-results: true
