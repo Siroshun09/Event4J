@@ -163,13 +163,13 @@ class SimpleEventServiceProvider<K, E, O> implements EventServiceProvider<K, E, 
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? extends O1> orderComparator) {
+        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator) {
             return new SimpleEventServiceProvider.FactoryImpl<>(this.eventClass, (Comparator<O1>) orderComparator, null, this.executor);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? extends O1> orderComparator, O1 defaultOrder) {
+        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, O1 defaultOrder) {
             return new SimpleEventServiceProvider.FactoryImpl<>(this.eventClass, (Comparator<O1>) orderComparator, defaultOrder, this.executor);
         }
 

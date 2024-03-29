@@ -174,7 +174,7 @@ public interface EventServiceProvider<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_ -> new")
-        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? extends O1> orderComparator);
+        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator);
 
         /**
          * Sets the {@link Comparator} and the default order.
@@ -188,7 +188,7 @@ public interface EventServiceProvider<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_, _ -> new")
-        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? extends O1> orderComparator, O1 defaultOrder);
+        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, O1 defaultOrder);
 
         /**
          * Sets the {@link Executor}.
