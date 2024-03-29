@@ -47,6 +47,42 @@ public record ListenerBase<K, E, O>(@NotNull Class<E> eventClass,
                                     @Nullable O order) {
 
     /**
+     * Creates a new {@link ListenerBase}.
+     *
+     * @param eventClass the event class
+     * @param key        the key
+     * @param consumer   the {@link Consumer}
+     * @param <K>        the key type
+     * @param <E>        the event type
+     * @param <O>        the order type
+     * @return a new {@link ListenerBase}
+     */
+    public static <K, E, O> @NotNull ListenerBase<K, E, O> create(@NotNull Class<E> eventClass,
+                                                                  @NotNull K key,
+                                                                  @NotNull Consumer<? super E> consumer) {
+        return create(eventClass, key, consumer, null);
+    }
+
+    /**
+     * Creates a new {@link ListenerBase}.
+     *
+     * @param eventClass the event class
+     * @param key        the key
+     * @param consumer   the {@link Consumer}
+     * @param order      the order
+     * @param <K>        the key type
+     * @param <E>        the event type
+     * @param <O>        the order type
+     * @return a new {@link ListenerBase}
+     */
+    public static <K, E, O> @NotNull ListenerBase<K, E, O> create(@NotNull Class<E> eventClass,
+                                                                  @NotNull K key,
+                                                                  @NotNull Consumer<? super E> consumer,
+                                                                  @Nullable O order) {
+        return new ListenerBase<>(eventClass, key, consumer, order);
+    }
+
+    /**
      * The constructor of {@link ListenerBase}.
      *
      * @param eventClass the event class
