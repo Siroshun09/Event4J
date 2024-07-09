@@ -22,47 +22,31 @@
  *     SOFTWARE.
  */
 
-package dev.siroshun.event4j.api.caller;
+package dev.siroshun.event4j.test.helper.listener;
 
-import dev.siroshun.event4j.test.helper.event.SampleEvent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
-class AsyncEventCallerTest {
+public class ThrowingListener<E> implements Consumer<E> {
 
-    @Test
-    void testCall() throws Exception {
-        var caller = new CountingEventCaller();
-        caller.async(ForkJoinPool.commonPool()).call(new SampleEvent());
-        Thread.sleep(5);
-        Assertions.assertEquals(1, caller.counter.get());
+    @Contract(" -> new")
+    public static <E> @NotNull ThrowingListener<E> create() {
+        return new ThrowingListener<>();
     }
 
-    @Test
-    void testCallback() {
-        var caller = new CountingEventCaller();
+    private final RuntimeException originalException = new RuntimeException();
 
-        var event = new SampleEvent();
-        var future = new CompletableFuture<SampleEvent>();
-
-        caller.async(ForkJoinPool.commonPool()).call(event, future::complete);
-
-        Assertions.assertSame(event, future.join());
-        Assertions.assertEquals(1, caller.counter.get());
+    private ThrowingListener() {
     }
 
-    private static final class CountingEventCaller implements EventCaller<SampleEvent> {
+    @Override
+    public void accept(E e) {
+        throw this.originalException;
+    }
 
-        private final AtomicInteger counter = new AtomicInteger();
-
-        @Override
-        public void call(@NotNull SampleEvent event) {
-            this.counter.incrementAndGet();
-        }
+    public @NotNull RuntimeException originalException() {
+        return this.originalException;
     }
 }
