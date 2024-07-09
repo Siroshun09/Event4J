@@ -1,7 +1,7 @@
 /*
  *     Copyright (c) 2020-2024 Siroshun09
  *
- *     This file is part of Event4J.
+ *     This file is part of event4j.
  *
  *     Permission is hereby granted, free of charge, to any person obtaining a copy
  *     of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,47 @@
  *     SOFTWARE.
  */
 
+package dev.siroshun.event4j.api.listener;
+
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Consumer;
+
 /**
- * A package for {@link com.github.siroshun09.event4j.priority.Priority}.
+ * An interface to create/subscribe a listener.
+ *
+ * @param <K> the key type
+ * @param <E> the event type
+ * @param <O> the order type
  */
-package com.github.siroshun09.event4j.priority;
+public interface ListenerFactory<K, E, O> {
+
+    /**
+     * Sets the key.
+     *
+     * @param key the key
+     * @return this {@link ListenerFactory}
+     */
+    @Contract("_ -> this")
+    @NotNull ListenerFactory<K, E, O> key(K key);
+
+    /**
+     * Sets the {@link Consumer}.
+     *
+     * @param consumer the {@link Consumer}
+     * @return this {@link ListenerFactory}
+     */
+    @Contract("_ -> this")
+    @NotNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
+
+    /**
+     * Sets the order.
+     *
+     * @param order the order
+     * @return this {@link ListenerFactory}
+     */
+    @Contract("_ -> this")
+    @NotNull ListenerFactory<K, E, O> order(O order);
+
+}

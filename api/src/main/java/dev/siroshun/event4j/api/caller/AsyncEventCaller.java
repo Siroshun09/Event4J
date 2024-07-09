@@ -1,7 +1,7 @@
 /*
  *     Copyright (c) 2020-2024 Siroshun09
  *
- *     This file is part of Event4J.
+ *     This file is part of event4j.
  *
  *     Permission is hereby granted, free of charge, to any person obtaining a copy
  *     of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,30 @@
  *     SOFTWARE.
  */
 
-/**
- * A package of the listener related interfaces.
- */
-package com.github.siroshun09.event4j.listener;
+package dev.siroshun.event4j.api.caller;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
+
+final class AsyncEventCaller<E> implements EventCaller<E> {
+
+    private final EventCaller<E> eventCaller;
+    private final Executor executor;
+
+    AsyncEventCaller(@NotNull EventCaller<E> eventCaller, @NotNull Executor executor) {
+        this.eventCaller = eventCaller;
+        this.executor = executor;
+    }
+
+    @Override
+    public void call(@NotNull E event) {
+        this.executor.execute(() -> this.eventCaller.call(event));
+    }
+
+    @Override
+    public <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+        this.executor.execute(() -> this.eventCaller.call(event, callback));
+    }
+}

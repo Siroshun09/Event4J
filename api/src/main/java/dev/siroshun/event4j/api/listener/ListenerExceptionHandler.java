@@ -1,7 +1,7 @@
 /*
  *     Copyright (c) 2020-2024 Siroshun09
  *
- *     This file is part of Event4J.
+ *     This file is part of event4j.
  *
  *     Permission is hereby granted, free of charge, to any person obtaining a copy
  *     of this software and associated documentation files (the "Software"), to deal
@@ -22,49 +22,50 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.caller;
+package dev.siroshun.event4j.api.listener;
 
-import org.jetbrains.annotations.Contract;
+import dev.siroshun.event4j.api.caller.EventCaller;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-
 /**
- * An interface to call events.
+ * An interface to handle the exception that is thrown from {@link SubscribedListener#consumer()}.
  *
+ * @param <K> the key type
  * @param <E> the event type
+ * @param <O> the order type
  */
 @FunctionalInterface
-public interface EventCaller<E> {
+public interface ListenerExceptionHandler<K, E, O> {
 
     /**
-     * Calls the event.
+     * Handles the exception.
      *
-     * @param event the event instance
+     * @param event     the event instance
+     * @param listener  the {@link SubscribedListener} that throws an exception
+     * @param exception the thrown exception
+     * @return the {@link Result} that indicates what the {@link EventCaller} should do next
      */
-    void call(@NotNull E event);
+    @NotNull Result handleException(@NotNull E event, @NotNull SubscribedListener<K, ? extends E, O> listener, @NotNull Throwable exception);
 
     /**
-     * Calls the event.
-     *
-     * @param event the event instance
-     * @param callback the {@link Consumer} that accepts the event after calling.
-     * @param <T>   the event type that inherits from {@link E}
+     * The operations that indicates what the {@link EventCaller} should do next
      */
-    default <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
-        this.call(event);
-        callback.accept(event);
-    }
+    enum Result {
 
-    /**
-     * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
-     *
-     * @param executor the {@link Executor} to use calling {@link #call(Object)}
-     * @return a new {@link EventCaller}
-     */
-    @Contract("_ -> new")
-    default @NotNull EventCaller<E> async(@NotNull Executor executor) {
-        return new AsyncEventCaller<>(this, executor);
+        /**
+         * A {@link Result} that indicates that the {@link EventCaller} should not post the event to subsequent listeners.
+         */
+        BREAK,
+
+        /**
+         * A {@link Result} that indicates that the {@link EventCaller} should post the event to subsequent listeners.
+         */
+        CONTINUE,
+
+        /**
+         * A {@link Result} that indicates that {@link EventCaller} should re-throw an exception.
+         */
+        RETHROW
+
     }
 }

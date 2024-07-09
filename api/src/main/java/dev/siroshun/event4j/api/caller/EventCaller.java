@@ -1,7 +1,7 @@
 /*
  *     Copyright (c) 2020-2024 Siroshun09
  *
- *     This file is part of Event4J.
+ *     This file is part of event4j.
  *
  *     Permission is hereby granted, free of charge, to any person obtaining a copy
  *     of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,49 @@
  *     SOFTWARE.
  */
 
-package com.github.siroshun09.event4j.listener;
+package dev.siroshun.event4j.api.caller;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 /**
- * An interface to create/subscribe a listener.
+ * An interface to call events.
  *
- * @param <K> the key type
  * @param <E> the event type
- * @param <O> the order type
  */
-public interface ListenerFactory<K, E, O> {
+@FunctionalInterface
+public interface EventCaller<E> {
 
     /**
-     * Sets the key.
+     * Calls the event.
      *
-     * @param key the key
-     * @return this {@link ListenerFactory}
+     * @param event the event instance
      */
-    @Contract("_ -> this")
-    @NotNull ListenerFactory<K, E, O> key(K key);
+    void call(@NotNull E event);
 
     /**
-     * Sets the {@link Consumer}.
+     * Calls the event.
      *
-     * @param consumer the {@link Consumer}
-     * @return this {@link ListenerFactory}
+     * @param event the event instance
+     * @param callback the {@link Consumer} that accepts the event after calling.
+     * @param <T>   the event type that inherits from {@link E}
      */
-    @Contract("_ -> this")
-    @NotNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
+    default <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+        this.call(event);
+        callback.accept(event);
+    }
 
     /**
-     * Sets the order.
+     * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
      *
-     * @param order the order
-     * @return this {@link ListenerFactory}
+     * @param executor the {@link Executor} to use calling {@link #call(Object)}
+     * @return a new {@link EventCaller}
      */
-    @Contract("_ -> this")
-    @NotNull ListenerFactory<K, E, O> order(O order);
-
+    @Contract("_ -> new")
+    default @NotNull EventCaller<E> async(@NotNull Executor executor) {
+        return new AsyncEventCaller<>(this, executor);
+    }
 }

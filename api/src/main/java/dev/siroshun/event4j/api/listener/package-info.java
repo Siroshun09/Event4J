@@ -1,7 +1,7 @@
 /*
  *     Copyright (c) 2020-2024 Siroshun09
  *
- *     This file is part of Event4J.
+ *     This file is part of event4j.
  *
  *     Permission is hereby granted, free of charge, to any person obtaining a copy
  *     of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,6 @@
  */
 
 /**
- * A package for interfaces that call events.
+ * A package of the listener related interfaces.
  */
-package com.github.siroshun09.event4j.caller;
+package dev.siroshun.event4j.api.listener;
