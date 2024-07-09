@@ -67,7 +67,7 @@ public record Priority(int value) implements Comparable<Priority> {
      */
     public static @NotNull Priority value(int value) {
         return switch (value) {
-            case -128 ->  LOW;
+            case -128 -> LOW;
             case 0 -> NORMAL;
             case 128 -> HIGH;
             default -> new Priority(value);
