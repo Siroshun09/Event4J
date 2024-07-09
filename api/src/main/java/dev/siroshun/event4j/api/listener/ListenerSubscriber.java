@@ -48,7 +48,7 @@ public interface ListenerSubscriber<K, E, O> {
      *
      * @return all existing {@link SubscribedListener}s
      */
-    @NotNull List<SubscribedListener<K, ? extends E, O>> allListeners();
+    @NotNull Collection<SubscribedListener<K, ? extends E, O>> allListeners();
 
     /**
      * Gets the existing {@link SubscribedListener}s for the specified event.
