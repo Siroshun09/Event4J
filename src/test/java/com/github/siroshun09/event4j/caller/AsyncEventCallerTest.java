@@ -24,8 +24,6 @@
 
 package com.github.siroshun09.event4j.caller;
 
-import com.github.siroshun09.event4j.shared.event.Event;
-import com.github.siroshun09.event4j.shared.event.SampleEvent;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -37,44 +35,36 @@ import java.util.concurrent.atomic.AtomicInteger;
 class AsyncEventCallerTest {
 
     @Test
-    void testCall() {
+    void testCall() throws Exception {
         var caller = new CountingEventCaller();
-        caller.asAsync().call(new SampleEvent());
+        caller.async(ForkJoinPool.commonPool()).call(new SampleEvent());
+        Thread.sleep(5);
         Assertions.assertEquals(1, caller.counter.get());
     }
 
     @Test
-    void testCallAsync() throws Exception {
-        var caller = new CountingEventCaller();
-        caller.asAsync().callAsync(new SampleEvent());
-        Thread.sleep(10);
-        Assertions.assertEquals(1, caller.counter.get());
-    }
-
-    @Test
-    void testCallAsyncAndCallback() {
+    void testCallback() {
         var caller = new CountingEventCaller();
 
         var event = new SampleEvent();
         var future = new CompletableFuture<SampleEvent>();
 
-        caller.asAsync().callAsync(event, future::complete);
+        caller.async(ForkJoinPool.commonPool()).call(event, future::complete);
 
         Assertions.assertSame(event, future.join());
         Assertions.assertEquals(1, caller.counter.get());
     }
 
-    private static final class CountingEventCaller implements EventCaller<Event> {
+    private static final class CountingEventCaller implements EventCaller<SampleEvent> {
 
         private final AtomicInteger counter = new AtomicInteger();
 
         @Override
-        public <T extends Event> void call(@NotNull T event) {
+        public void call(@NotNull SampleEvent event) {
             this.counter.incrementAndGet();
         }
+    }
 
-        private @NotNull AsyncEventCaller<Event> asAsync() {
-            return AsyncEventCaller.create(this, ForkJoinPool.commonPool());
-        }
+    private static final class SampleEvent {
     }
 }

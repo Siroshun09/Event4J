@@ -24,7 +24,11 @@
 
 package com.github.siroshun09.event4j.caller;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.concurrent.Executor;
+import java.util.function.Consumer;
 
 /**
  * An interface to call events.
@@ -38,8 +42,29 @@ public interface EventCaller<E> {
      * Calls the event.
      *
      * @param event the event instance
+     */
+    void call(@NotNull E event);
+
+    /**
+     * Calls the event.
+     *
+     * @param event the event instance
+     * @param callback the {@link Consumer} that accepts the event after calling.
      * @param <T>   the event type that inherits from {@link E}
      */
-    <T extends E> void call(@NotNull T event);
+    default <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+        this.call(event);
+        callback.accept(event);
+    }
 
+    /**
+     * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
+     *
+     * @param executor the {@link Executor} to use calling {@link #call(Object)}
+     * @return a new {@link EventCaller}
+     */
+    @Contract("_ -> new")
+    default @NotNull EventCaller<E> async(@NotNull Executor executor) {
+        return new AsyncEventCaller<>(this, executor);
+    }
 }

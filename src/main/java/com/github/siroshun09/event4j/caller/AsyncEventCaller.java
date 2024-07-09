@@ -24,48 +24,28 @@
 
 package com.github.siroshun09.event4j.caller;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-/**
- * An interface that supports async event calling.
- *
- * @param <E> the event type
- */
-public interface AsyncEventCaller<E> extends EventCaller<E> {
+final class AsyncEventCaller<E> implements EventCaller<E> {
 
-    /**
-     * Creates a new {@link AsyncEventCaller} with specified {@link EventCaller} and {@link Executor}.
-     *
-     * @param eventCaller the {@link EventCaller} that calls events
-     * @param executor    the {@link Executor} that executes {@link #call(Object)} asynchronously
-     * @param <E>         the event type
-     * @return a new {@link AsyncEventCaller}
-     */
-    @Contract(value = "_, _ -> new", pure = true)
-    static <E> @NotNull AsyncEventCaller<E> create(@NotNull EventCaller<E> eventCaller, @NotNull Executor executor) {
-        return new DefaultAsyncEventCaller<>(eventCaller, executor);
+    private final EventCaller<E> eventCaller;
+    private final Executor executor;
+
+    AsyncEventCaller(@NotNull EventCaller<E> eventCaller, @NotNull Executor executor) {
+        this.eventCaller = eventCaller;
+        this.executor = executor;
     }
 
-    /**
-     * Calls {@link #call(Object)} asynchronously.
-     *
-     * @param event the event instance
-     * @param <T>   the event type that inherits from {@link E}
-     */
-    <T extends E> void callAsync(@NotNull T event);
+    @Override
+    public void call(@NotNull E event) {
+        this.executor.execute(() -> this.eventCaller.call(event));
+    }
 
-    /**
-     * Calls {@link #call(Object)} asynchronously.
-     *
-     * @param event    the event instance
-     * @param callback the {@link Consumer} that is used as a callback after calling the event
-     * @param <T>      the event type that inherits from {@link E}
-     */
-    <T extends E> void callAsync(@NotNull T event, @Nullable Consumer<? super T> callback);
-
+    @Override
+    public <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+        this.executor.execute(() -> this.eventCaller.call(event, callback));
+    }
 }
