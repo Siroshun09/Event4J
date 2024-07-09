@@ -37,12 +37,12 @@ import java.util.Comparator;
  * The smaller value, the listener is called earlier; the larger value, it is called later.
  * For the same value, it is not defined which is called first.
  */
-public record Priority(int value) {
+public record Priority(int value) implements Comparable<Priority> {
 
     /**
      * A {@link Comparator} to compare two {@link Priority}.
      */
-    public static final Comparator<Priority> COMPARATOR = Comparator.comparingInt(Priority::value);
+    public static final Comparator<Priority> COMPARATOR = Comparator.naturalOrder();
 
     /**
      * Priority value: -64
@@ -72,5 +72,10 @@ public record Priority(int value) {
             case 128 -> HIGH;
             default -> new Priority(value);
         };
+    }
+
+    @Override
+    public int compareTo(@NotNull Priority o) {
+        return Integer.compare(this.value, o.value);
     }
 }
