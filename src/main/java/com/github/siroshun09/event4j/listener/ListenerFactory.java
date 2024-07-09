@@ -65,12 +65,4 @@ public interface ListenerFactory<K, E, O> {
     @Contract("_ -> this")
     @NotNull ListenerFactory<K, E, O> order(O order);
 
-    /**
-     * Subscribes a listener.
-     *
-     * @return a {@link SubscribedListener}
-     */
-    @Contract(" -> new")
-    @NotNull SubscribedListener<K, E, O> subscribe();
-
 }
