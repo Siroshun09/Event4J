@@ -48,7 +48,7 @@ public interface ListenerFactory<K, E, O> {
     @NotNull ListenerFactory<K, E, O> key(K key);
 
     /**
-     * Sets the {@link Consumer}
+     * Sets the {@link Consumer}.
      *
      * @param consumer the {@link Consumer}
      * @return this {@link ListenerFactory}
@@ -57,7 +57,7 @@ public interface ListenerFactory<K, E, O> {
     @NotNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
 
     /**
-     * Sets the order
+     * Sets the order.
      *
      * @param order the order
      * @return this {@link ListenerFactory}

@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 public interface ListenerExceptionHandler<K, E, O> {
 
     /**
-     * Handles the exception
+     * Handles the exception.
      *
      * @param event     the event instance
      * @param listener  the {@link SubscribedListener} that throws an exception
@@ -65,5 +65,6 @@ public interface ListenerExceptionHandler<K, E, O> {
          * A {@link Result} that indicates that {@link com.github.siroshun09.event4j.caller.EventCaller} should re-throw an exception.
          */
         RETHROW
+
     }
 }
