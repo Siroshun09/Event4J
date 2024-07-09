@@ -5,9 +5,9 @@ on:
 
 jobs:
   generate-javadoc:
-    uses: Siroshun09/gh-actions-workflows/.github/workflows/maven-generate-javadoc.yml@v1
+    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle-generate-javadoc.yml@v1
     with:
-      java-version: '21'
+      java-version: '17'
   deploy-javadoc:
     needs: [ generate-javadoc ]
     uses: Siroshun09/gh-actions-workflows/.github/workflows/deploy-to-gh-pages.yml@v1
