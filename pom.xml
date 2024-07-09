@@ -30,7 +30,7 @@
 
     <groupId>com.github.siroshun09.event4j</groupId>
     <artifactId>event4j</artifactId>
-    <version>4.0.0-rc.2</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Event4J</name>
