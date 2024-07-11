@@ -32,13 +32,14 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 class AsyncEventCallerTest {
 
     @Test
     void testCall() throws Exception {
         var caller = new CountingEventCaller();
-        caller.async(ForkJoinPool.commonPool()).call(new SampleEvent());
+        caller.callAsync(new SampleEvent());
         Thread.sleep(5);
         Assertions.assertEquals(1, caller.counter.get());
     }
@@ -50,7 +51,7 @@ class AsyncEventCallerTest {
         var event = new SampleEvent();
         var future = new CompletableFuture<SampleEvent>();
 
-        caller.async(ForkJoinPool.commonPool()).call(event, future::complete);
+        caller.callAsync(event, future::complete);
 
         Assertions.assertSame(event, future.join());
         Assertions.assertEquals(1, caller.counter.get());
@@ -63,6 +64,14 @@ class AsyncEventCallerTest {
         @Override
         public void call(@NotNull SampleEvent event) {
             this.counter.incrementAndGet();
+        }
+
+        private void callAsync(@NotNull SampleEvent event) {
+            EventCaller.asyncCaller(this, ForkJoinPool.commonPool()).call(event);
+        }
+
+        private void callAsync(@NotNull SampleEvent event, @NotNull Consumer<SampleEvent> consumer) {
+            EventCaller.asyncCaller(this, ForkJoinPool.commonPool()).call(event, consumer);
         }
     }
 }

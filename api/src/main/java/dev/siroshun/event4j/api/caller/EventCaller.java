@@ -39,6 +39,19 @@ import java.util.function.Consumer;
 public interface EventCaller<E> {
 
     /**
+     * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
+     *
+     * @param caller the original {@link EventCaller}
+     * @param executor the {@link Executor} to use calling {@link #call(Object)}
+     * @param <E> the event type
+     * @return a new {@link EventCaller}
+     */
+    @Contract(value = "_, _ -> new", pure = true)
+    static <E> @NotNull EventCaller<E> asyncCaller(@NotNull EventCaller<E> caller, @NotNull Executor executor) {
+        return new AsyncEventCaller<>(caller, executor);
+    }
+
+    /**
      * Calls the event.
      *
      * @param event the event instance
@@ -55,16 +68,5 @@ public interface EventCaller<E> {
     default <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
         this.call(event);
         callback.accept(event);
-    }
-
-    /**
-     * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
-     *
-     * @param executor the {@link Executor} to use calling {@link #call(Object)}
-     * @return a new {@link EventCaller}
-     */
-    @Contract("_ -> new")
-    default @NotNull EventCaller<E> async(@NotNull Executor executor) {
-        return new AsyncEventCaller<>(this, executor);
     }
 }
