@@ -38,6 +38,18 @@ import org.jetbrains.annotations.NotNull;
 public interface ListenerExceptionHandler<K, E, O> {
 
     /**
+     * Creates a {@link ListenerExceptionHandler} that returns {@link Result#CONTINUE}.
+     *
+     * @param <K> the key type
+     * @param <E> the event type
+     * @param <O> the order type
+     * @return a {@link ListenerExceptionHandler} that returns {@link Result#CONTINUE}
+     */
+    static <K, E, O> @NotNull ListenerExceptionHandler<K, E, O> continueHandler() {
+        return (event, listener, e) -> Result.CONTINUE;
+    }
+
+    /**
      * Handles the exception.
      *
      * @param event     the event instance
