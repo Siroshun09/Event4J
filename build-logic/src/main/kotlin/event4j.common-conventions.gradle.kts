@@ -51,7 +51,6 @@ java {
 
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(javaVersion.ordinal + 1))
-        vendor.set(JvmVendorSpec.ADOPTIUM)
     }
 }
 
