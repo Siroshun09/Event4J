@@ -49,8 +49,8 @@ public interface EventCaller<E> {
      */
     @Contract(value = "_, _ -> new", pure = true)
     static <E> @NotNull EventCaller<E> asyncCaller(@NotNull EventCaller<E> caller, @NotNull Executor executor) {
-        Objects.requireNonNull(caller, "caller cannot be null");
-        Objects.requireNonNull(executor, "executor cannot be null");
+        Objects.requireNonNull(caller, "caller cannot be null.");
+        Objects.requireNonNull(executor, "executor cannot be null.");
         return new AsyncEventCaller<>(caller, executor);
     }
 
