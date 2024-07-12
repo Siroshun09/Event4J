@@ -26,6 +26,7 @@ package dev.siroshun.event4j.api.listener;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -68,6 +69,29 @@ public interface ListenerSubscriber<K, E, O> {
      * @return a {@link SubscribedListener}
      */
     <T extends E> @NotNull SubscribedListener<K, T, O> subscribe(@NotNull Class<T> eventClass, @NotNull Consumer<? super ListenerFactory<K, T, O>> builder);
+
+    /**
+     * Subscribes a new listener for the specified event.
+     *
+     * @param eventClass the class of the event
+     * @param key        the key
+     * @param consumer   the {@link Consumer}
+     * @param <T>        the event type
+     * @return a {@link SubscribedListener}
+     */
+    <T extends E> @NotNull SubscribedListener<K, T, O> subscribe(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer);
+
+    /**
+     * Subscribes a new listener for the specified event.
+     *
+     * @param eventClass the class of the event
+     * @param key        the key
+     * @param consumer   the {@link Consumer}
+     * @param order      the order, passing {@code null} to use a default order
+     * @param <T>        the event type
+     * @return a {@link SubscribedListener}
+     */
+    <T extends E> @NotNull SubscribedListener<K, T, O> subscribe(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer, @Nullable O order);
 
     /**
      * Creates a new {@link BulkSubscriber} for subscribing multiple listeners at once.
@@ -124,6 +148,31 @@ public interface ListenerSubscriber<K, E, O> {
          */
         @Contract("_, _ -> this")
         <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull Consumer<? super ListenerFactory<K, T, O>> builder);
+
+        /**
+         * Adds a new listener for the specified event.
+         *
+         * @param eventClass the class of the event
+         * @param key        the key
+         * @param consumer   the {@link Consumer}
+         * @param <T>        the event type
+         * @return this {@link BulkSubscriber}
+         */
+        @Contract("_, _, _ -> this")
+        <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer);
+
+        /**
+         * Adds a new listener for the specified event.
+         *
+         * @param eventClass the class of the event
+         * @param key        the key
+         * @param consumer   the {@link Consumer}
+         * @param order      the order, passing {@code null} to use a default order
+         * @param <T>        the event type
+         * @return this {@link BulkSubscriber}
+         */
+        @Contract("_, _, _, _ -> this")
+        <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer, @Nullable O order);
 
         /**
          * Subscribes added listeners.
