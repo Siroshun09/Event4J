@@ -57,6 +57,22 @@ class AsyncEventCallerTest {
         Assertions.assertEquals(1, caller.counter.get());
     }
 
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void testNullArgument() {
+        var caller = new CountingEventCaller();
+        var async = EventCaller.asyncCaller(caller, run -> {
+            throw new IllegalStateException("Unexpected executor call");
+        });
+
+        Assertions.assertThrows(NullPointerException.class, () -> EventCaller.asyncCaller(null, null));
+        Assertions.assertThrows(NullPointerException.class, () -> EventCaller.asyncCaller(caller, null));
+        Assertions.assertThrows(NullPointerException.class, () -> async.call(null));
+        Assertions.assertThrows(NullPointerException.class, () -> async.call(null, event -> {
+        }));
+        Assertions.assertThrows(NullPointerException.class, () -> async.call(new SampleEvent(), null));
+    }
+
     private static final class CountingEventCaller implements EventCaller<SampleEvent> {
 
         private final AtomicInteger counter = new AtomicInteger();
