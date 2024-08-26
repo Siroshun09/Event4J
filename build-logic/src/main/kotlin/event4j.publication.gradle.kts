@@ -79,14 +79,7 @@ publishing {
 
         repositories {
             maven {
-                name = "mavenCentral"
-
-                url = if (version.toString().endsWith("-SNAPSHOT")) {
-                    uri("https://oss.sonatype.org/content/repositories/snapshots")
-                } else {
-                    uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                }
-                credentials(PasswordCredentials::class)
+                url = uri(rootProject.layout.buildDirectory.dir("staging"))
             }
         }
     }
