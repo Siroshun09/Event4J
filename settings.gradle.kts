@@ -11,6 +11,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "event4j"
 
 addProject("api")
+addProject("tree")
 addProject("test-helper")
 
 fun addProject(name: String) {
