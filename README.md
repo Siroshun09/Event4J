@@ -1,5 +1,4 @@
 ![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.event4j/event4j)
-![Maven Central](https://img.shields.io/nexus/s/com.github.siroshun09.event4j/event4j?label=snapshot&server=https%3A%2F%2Foss.sonatype.org)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/Event4J/build.yml?branch=master)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/Event4J)
 [![Javadoc](https://img.shields.io/badge/javadoc-page-orange)](https://siroshun09.github.io/Event4J/latest)
@@ -14,13 +13,15 @@ Event4J is the simple event library for Java.
 
 ## Usage
 
+If you need implementations of api, you can change `event4j-api` to `event4j-tree`.
+
 #### For Maven:
 
 ```xml
     <dependency>
-        <groupId>com.github.siroshun09.event4j</groupId>
-        <artifactId>event4j</artifactId>
-        <version>3.2.1</version>
+        <groupId>dev.siroshun.event4j</groupId>
+        <artifactId>event4j-api</artifactId>
+        <version>4.0.0</version>
     </dependency>
 ```
 
@@ -28,13 +29,13 @@ Event4J is the simple event library for Java.
 
 ```groovy
     dependencies {
-        compile 'com.github.siroshun09.event4j:event4j:3.2.1'
+        compile 'dev.siroshun.event4j:event4j-api:4.0.0'
     }
 ```
 
 ```kotlin
     dependencies {
-        implementation("com.github.siroshun09.event4j:event4j:3.2.1")
+        implementation("dev.siroshun.event4j:event4j-api:4.0.0")
     }
 ```
 
