@@ -1,4 +1,4 @@
-![Maven Central](https://img.shields.io/maven-central/v/com.github.siroshun09.event4j/event4j)
+![Maven Central](https://img.shields.io/maven-central/v/dev.siroshun.event4j/event4j-api)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Siroshun09/Event4J/build.yml?branch=master)
 ![GitHub](https://img.shields.io/github/license/Siroshun09/Event4J)
 [![Javadoc](https://img.shields.io/badge/javadoc-page-orange)](https://siroshun09.github.io/Event4J/latest)
@@ -21,7 +21,7 @@ If you need implementations of api, you can change `event4j-api` to `event4j-tre
     <dependency>
         <groupId>dev.siroshun.event4j</groupId>
         <artifactId>event4j-api</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
     </dependency>
 ```
 
@@ -29,13 +29,13 @@ If you need implementations of api, you can change `event4j-api` to `event4j-tre
 
 ```groovy
     dependencies {
-        compile 'dev.siroshun.event4j:event4j-api:4.0.0'
+        compile 'dev.siroshun.event4j:event4j-api:4.0.1'
     }
 ```
 
 ```kotlin
     dependencies {
-        implementation("dev.siroshun.event4j:event4j-api:4.0.0")
+        implementation("dev.siroshun.event4j:event4j-api:4.0.1")
     }
 ```
 
