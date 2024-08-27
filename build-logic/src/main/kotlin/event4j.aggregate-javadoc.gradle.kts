@@ -32,6 +32,7 @@ tasks {
         doFirst {
             include(JavadocAggregator.includes)
             exclude(JavadocAggregator.excludes)
+            exclude("**/module-info.java")
 
             val opts = options as StandardJavadocDocletOptions
             opts.docTitle("Event4J $version")
@@ -39,6 +40,7 @@ tasks {
                 .links(*JavadocAggregator.javadocLinks.toTypedArray())
 
             opts.addStringOption("Xmaxwarns", Int.MAX_VALUE.toString())
+            opts.addStringOption("-add-modules", "org.jetbrains.annotations")
         }
     }
 }
