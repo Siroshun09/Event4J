@@ -36,6 +36,8 @@ import java.util.Comparator;
  * {@link Priority} is compared by {@link Integer#compare(int, int)}.
  * The smaller value, the listener is called earlier; the larger value, it is called later.
  * For the same value, it is not defined which is called first.
+ *
+ * @param value the priority value
  */
 public record Priority(int value) implements Comparable<Priority> {
 
