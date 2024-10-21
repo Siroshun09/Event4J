@@ -3,7 +3,7 @@
 annotations = "26.0.1"
 
 # testing tool
-junit = "5.11.2"
+junit = "5.11.3"
 
 [libraries]
 # libraries
