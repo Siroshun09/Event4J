@@ -25,8 +25,8 @@
 package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.listener.ListenerFactory;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -39,30 +39,31 @@ class ListenerFactoryImpl<K, E, O> implements ListenerFactory<K, E, O> {
     private Consumer<? super E> consumer;
     private O order;
 
-    ListenerFactoryImpl(@NotNull Class<E> eventClass,  @UnknownNullability O defaultOrder) {
+    ListenerFactoryImpl(@NonNull Class<E> eventClass, @UnknownNullability O defaultOrder) {
         this.eventClass = eventClass;
         this.order = defaultOrder;
     }
 
     @Override
-    public @NotNull ListenerFactory<K, E, O> key(K key) {
+    public @NonNull ListenerFactory<K, E, O> key(K key) {
         this.key = key;
         return this;
     }
 
     @Override
-    public @NotNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer) {
+    public @NonNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer) {
         this.consumer = consumer;
         return this;
     }
 
     @Override
-    public @NotNull ListenerFactory<K, E, O> order(O order) {
+    public @NonNull ListenerFactory<K, E, O> order(O order) {
         this.order = order;
         return this;
     }
 
-    @NotNull SubscribedListenerImpl<K, E, O> build() {
+    @NonNull
+    SubscribedListenerImpl<K, E, O> build() {
         Objects.requireNonNull(this.key, "key is not set.");
         Objects.requireNonNull(this.consumer, "consumer is not set.");
         return new SubscribedListenerImpl<>(this.eventClass, this.key, this.consumer, this.order);

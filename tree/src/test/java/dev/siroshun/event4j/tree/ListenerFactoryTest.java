@@ -26,7 +26,7 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.priority.Priority;
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 
 import static dev.siroshun.event4j.tree.TestHelper.emptyConsumer;
@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@NullMarked
 class ListenerFactoryTest {
 
     @Test
@@ -70,7 +71,7 @@ class ListenerFactoryTest {
         assertSame(Priority.NORMAL, listener.order());
     }
 
-    private static <E> @NotNull ListenerFactoryImpl<String, E, Priority> newFactory(@NotNull Class<E> eventClass) {
+    private static <E> ListenerFactoryImpl<String, E, Priority> newFactory(Class<E> eventClass) {
         return new ListenerFactoryImpl<>(eventClass, Priority.NORMAL);
     }
 

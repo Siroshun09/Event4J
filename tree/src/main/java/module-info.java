@@ -6,6 +6,7 @@
 module dev.siroshun.event4j.tree {
     requires org.jetbrains.annotations;
     requires dev.siroshun.event4j.api;
+    requires org.jspecify;
 
     exports dev.siroshun.event4j.tree;
 }

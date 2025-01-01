@@ -1,5 +1,6 @@
 [versions]
 # libraries
+jspecify = "1.0.0"
 annotations = "26.0.1"
 
 # testing tool
@@ -8,6 +9,7 @@ junit = "5.11.4"
 [libraries]
 # libraries
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 
 # testing tool
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }

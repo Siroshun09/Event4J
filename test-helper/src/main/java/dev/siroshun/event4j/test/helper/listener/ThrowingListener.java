@@ -25,14 +25,15 @@
 package dev.siroshun.event4j.test.helper.listener;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.function.Consumer;
 
+@NullMarked
 public class ThrowingListener<E> implements Consumer<E> {
 
     @Contract(" -> new")
-    public static <E> @NotNull ThrowingListener<E> create() {
+    public static <E> ThrowingListener<E> create() {
         return new ThrowingListener<>();
     }
 
@@ -46,7 +47,7 @@ public class ThrowingListener<E> implements Consumer<E> {
         throw this.originalException;
     }
 
-    public @NotNull RuntimeException originalException() {
+    public RuntimeException originalException() {
         return this.originalException;
     }
 }

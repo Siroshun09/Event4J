@@ -26,30 +26,31 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.priority.Priority;
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.function.Consumer;
 
+@NullMarked
 final class TestHelper {
 
-    static @NotNull ListenerList<String, SampleEvent, Priority> newListenerList() {
+    static ListenerList<String, SampleEvent, Priority> newListenerList() {
         return new ListenerList<>(SampleEvent.class, Priority.COMPARATOR);
     }
 
-    static @NotNull SubscribedListenerImpl<String, SampleEvent, Priority> newListener(@NotNull Consumer<SampleEvent> listener, @NotNull Priority priority) {
+    static SubscribedListenerImpl<String, SampleEvent, Priority> newListener(Consumer<SampleEvent> listener, Priority priority) {
         return newListener(SampleEvent.class, listener, priority);
     }
 
-    static <E> @NotNull SubscribedListenerImpl<String, E, Priority> newListener(@NotNull Class<E> eventClass, @NotNull Consumer<E> listener, @NotNull Priority priority) {
+    static <E> SubscribedListenerImpl<String, E, Priority> newListener(Class<E> eventClass, Consumer<E> listener, Priority priority) {
         return new SubscribedListenerImpl<>(eventClass, priority.toString(), classCheckingConsumer(eventClass, listener), priority);
     }
 
-    static <E> @NotNull Consumer<E> classCheckingConsumer(@NotNull Class<E> eventClass, @NotNull Consumer<E> consumer) {
+    static <E> Consumer<E> classCheckingConsumer(Class<E> eventClass, Consumer<E> consumer) {
         return e -> consumer.accept(Assertions.assertInstanceOf(eventClass, e));
     }
 
-    static <E> @NotNull Consumer<E> emptyConsumer() {
+    static <E> Consumer<E> emptyConsumer() {
         return e -> {
         };
     }

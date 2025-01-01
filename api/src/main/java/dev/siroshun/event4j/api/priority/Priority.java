@@ -24,7 +24,7 @@
 
 package dev.siroshun.event4j.api.priority;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Comparator;
 
@@ -67,7 +67,7 @@ public record Priority(int value) implements Comparable<Priority> {
      * @param value the priority value
      * @return the priority
      */
-    public static @NotNull Priority value(int value) {
+    public static @NonNull Priority value(int value) {
         return switch (value) {
             case -128 -> LOW;
             case 0 -> NORMAL;
@@ -77,7 +77,7 @@ public record Priority(int value) implements Comparable<Priority> {
     }
 
     @Override
-    public int compareTo(@NotNull Priority o) {
+    public int compareTo(@NonNull Priority o) {
         return Integer.compare(this.value, o.value);
     }
 }

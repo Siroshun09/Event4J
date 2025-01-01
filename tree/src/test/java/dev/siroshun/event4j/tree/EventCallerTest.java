@@ -28,7 +28,7 @@ import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.priority.Priority;
 import dev.siroshun.event4j.test.helper.event.ExtendedSampleEvent;
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,6 +40,7 @@ import static dev.siroshun.event4j.tree.TestHelper.newListener;
 import static dev.siroshun.event4j.tree.TestHelper.newListenerList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@NullMarked
 class EventCallerTest {
 
     @Test
@@ -59,7 +60,7 @@ class EventCallerTest {
 
     @ParameterizedTest
     @MethodSource("orderTestCases")
-    void testCallOrder(@NotNull OrderTestCase testCase) {
+    void testCallOrder(OrderTestCase testCase) {
         var list = newListenerList();
         var counter = new AtomicInteger(testCase.expectedCount());
         var caller = new EventCallerImpl<>(list, ListenerExceptionHandler.continueHandler());
@@ -82,10 +83,10 @@ class EventCallerTest {
         );
     }
 
-    private record OrderTestCase(@NotNull SampleEvent event, int expectedCount) {
+    private record OrderTestCase(SampleEvent event, int expectedCount) {
     }
 
-    private static <E extends SampleEvent> void addOrderCheckListener(@NotNull ListenerList<String, SampleEvent, Priority> list, @NotNull AtomicInteger counter, @NotNull Class<E> eventClass, int order) {
+    private static <E extends SampleEvent> void addOrderCheckListener(ListenerList<String, SampleEvent, Priority> list, AtomicInteger counter, Class<E> eventClass, int order) {
         list.holder(eventClass).modifyListeners(listeners -> listeners.add(newListener(
             eventClass,
             e -> assertEquals(order, counter.getAndDecrement()),

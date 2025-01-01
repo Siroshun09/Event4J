@@ -25,21 +25,22 @@
 package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.listener.SubscribedListener;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@NullMarked
 class TypedListeners<K, E, O> {
 
     private final Class<E> eventClass;
     private final List<SubscribedListener<K, E, O>> listeners = new ArrayList<>();
 
-    TypedListeners(@NotNull Class<E> eventClass) {
+    TypedListeners(Class<E> eventClass) {
         this.eventClass = eventClass;
     }
 
-    void add(@NotNull SubscribedListener<K, E, O> listener) {
+    void add(SubscribedListener<K, E, O> listener) {
         this.listeners.add(listener);
     }
 

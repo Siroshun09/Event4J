@@ -27,34 +27,38 @@ package dev.siroshun.event4j.tree;
 import dev.siroshun.event4j.api.caller.EventCaller;
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.listener.ListenerSubscriber;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jetbrains.annotations.UnknownNullability;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.NullUnmarked;
 
 import java.util.Comparator;
 import java.util.Objects;
 
+@NullMarked
 class TreeEventServiceImpl<K, E, O> implements TreeEventService<K, E, O> {
 
     private final ListenerSubscriber<K, E, O> subscriber;
     private final EventCaller<E> eventCaller;
 
-    TreeEventServiceImpl(@NotNull Class<E> eventClass, @NotNull Comparator<O> sorter, @UnknownNullability O defaultOrder,
-                         @NotNull ListenerExceptionHandler<K, E, O> exceptionHandler) {
+    TreeEventServiceImpl(Class<E> eventClass, Comparator<O> sorter, @UnknownNullability O defaultOrder,
+                         ListenerExceptionHandler<K, E, O> exceptionHandler) {
         var listenerList = new ListenerList<K, E, O>(eventClass, sorter);
         this.subscriber = new ListenerSubscriberImpl<>(listenerList, defaultOrder);
         this.eventCaller = new EventCallerImpl<>(listenerList, exceptionHandler);
     }
 
     @Override
-    public @NotNull EventCaller<E> caller() {
+    public EventCaller<E> caller() {
         return this.eventCaller;
     }
 
     @Override
-    public @NotNull ListenerSubscriber<K, E, O> subscriber() {
+    public ListenerSubscriber<K, E, O> subscriber() {
         return this.subscriber;
     }
 
+    @NullUnmarked
     static final class FactoryImpl<K, E, O> implements TreeEventService.Factory<K, E, O> {
 
         private final Class<E> eventClass;
@@ -69,41 +73,41 @@ class TreeEventServiceImpl<K, E, O> implements TreeEventService<K, E, O> {
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <K1> Factory<K1, E, O> keyClass(Class<? extends K1> keyClass) {
+        public <K1> @NonNull Factory<K1, E, O> keyClass(Class<? extends K1> keyClass) {
             return (Factory<K1, E, O>) this;
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <E1> Factory<K, E1, O> eventClass(Class<? extends E1> eventClass) {
+        public <E1> @NonNull Factory<K, E1, O> eventClass(Class<? extends E1> eventClass) {
             return new FactoryImpl<>((Class<E1>) eventClass, this.orderComparator, this.defaultOrder);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator) {
+        public <O1> @NonNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator) {
             return new FactoryImpl<>(this.eventClass, (Comparator<O1>) orderComparator, null);
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public @NotNull <O1> Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, O1 defaultOrder) {
+        public <O1> @NonNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, O1 defaultOrder) {
             return new FactoryImpl<>(this.eventClass, (Comparator<O1>) orderComparator, defaultOrder);
         }
 
         @Override
-        public @NotNull <O1 extends Comparable<O1>> Factory<K, E, O1> defaultOrder(@NotNull O1 defaultOrder) {
+        public <O1 extends Comparable<O1>> @NonNull Factory<K, E, O1> defaultOrder(@NonNull O1 defaultOrder) {
             Objects.requireNonNull(defaultOrder, "defaultOrder cannot be null without orderComparator");
             return new FactoryImpl<>(this.eventClass, Comparator.naturalOrder(), defaultOrder);
         }
 
         @Override
-        public @NotNull TreeEventService<K, E, O> create() {
+        public @NonNull TreeEventService<K, E, O> create() {
             return this.create(ListenerExceptionHandler.continueHandler());
         }
 
         @Override
-        public @NotNull TreeEventService<K, E, O> create(@NotNull ListenerExceptionHandler<K, E, O> exceptionHandler) {
+        public @NonNull TreeEventService<K, E, O> create(@NonNull ListenerExceptionHandler<K, E, O> exceptionHandler) {
             Objects.requireNonNull(exceptionHandler, "exceptionHandler cannot be null.");
             Objects.requireNonNull(this.eventClass, "eventClass is not set.");
             Objects.requireNonNull(this.orderComparator, "orderComparator is not set.");

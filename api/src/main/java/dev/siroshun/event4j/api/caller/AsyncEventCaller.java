@@ -24,30 +24,31 @@
 
 package dev.siroshun.event4j.api.caller;
 
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
+@NullMarked
 final class AsyncEventCaller<E> implements EventCaller<E> {
 
     private final EventCaller<E> eventCaller;
     private final Executor executor;
 
-    AsyncEventCaller(@NotNull EventCaller<E> eventCaller, @NotNull Executor executor) {
+    AsyncEventCaller(EventCaller<E> eventCaller, Executor executor) {
         this.eventCaller = eventCaller;
         this.executor = executor;
     }
 
     @Override
-    public void call(@NotNull E event) {
+    public void call(E event) {
         Objects.requireNonNull(event, "event cannot be null.");
         this.executor.execute(() -> this.eventCaller.call(event));
     }
 
     @Override
-    public <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+    public <T extends E> void call(T event, Consumer<? super T> callback) {
         Objects.requireNonNull(event, "event cannot be null.");
         Objects.requireNonNull(callback, "callback cannot be null.");
         this.executor.execute(() -> this.eventCaller.call(event, callback));

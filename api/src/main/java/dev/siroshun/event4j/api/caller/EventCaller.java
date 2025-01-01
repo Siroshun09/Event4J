@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.caller;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -37,6 +37,7 @@ import java.util.function.Consumer;
  * @param <E> the event type
  */
 @FunctionalInterface
+@NullMarked
 public interface EventCaller<E> {
 
     /**
@@ -48,7 +49,7 @@ public interface EventCaller<E> {
      * @return a new {@link EventCaller}
      */
     @Contract(value = "_, _ -> new", pure = true)
-    static <E> @NotNull EventCaller<E> asyncCaller(@NotNull EventCaller<E> caller, @NotNull Executor executor) {
+    static <E> EventCaller<E> asyncCaller(EventCaller<E> caller, Executor executor) {
         Objects.requireNonNull(caller, "caller cannot be null.");
         Objects.requireNonNull(executor, "executor cannot be null.");
         return new AsyncEventCaller<>(caller, executor);
@@ -59,7 +60,7 @@ public interface EventCaller<E> {
      *
      * @param event the event instance
      */
-    void call(@NotNull E event);
+    void call(E event);
 
     /**
      * Calls the event.
@@ -68,7 +69,7 @@ public interface EventCaller<E> {
      * @param callback the {@link Consumer} that accepts the event after calling.
      * @param <T>   the event type that inherits from {@link E}
      */
-    default <T extends E> void call(@NotNull T event, @NotNull Consumer<? super T> callback) {
+    default <T extends E> void call(T event, Consumer<? super T> callback) {
         Objects.requireNonNull(event, "event cannot be null.");
         Objects.requireNonNull(callback, "callback cannot be null.");
         this.call(event);

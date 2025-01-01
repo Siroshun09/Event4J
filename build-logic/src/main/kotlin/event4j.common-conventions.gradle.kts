@@ -36,6 +36,7 @@ val libs = extensions.getByType(org.gradle.accessors.dm.LibrariesForLibs::class)
 
 dependencies {
     compileOnlyApi(libs.annotations)
+    compileOnlyApi(libs.jspecify)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
