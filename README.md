@@ -47,4 +47,4 @@ Javadoc: https://siroshun09.github.io/Event4J/latest
 
 This project is under the MIT license. Please see [LICENSE](LICENSE) for more info.
 
-Copyright © 2020-2024, Siroshun09
+Copyright © 2020-2025, Siroshun09
