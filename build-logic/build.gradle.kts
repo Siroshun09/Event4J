@@ -59,10 +59,4 @@ tasks {
     processResources {
         filteringCharset = charset.name()
     }
-
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = javaVersion.majorVersion
-        }
-    }
 }
