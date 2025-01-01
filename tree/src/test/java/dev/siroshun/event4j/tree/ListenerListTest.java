@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static dev.siroshun.event4j.tree.TestHelper.newListener;
@@ -119,7 +120,7 @@ class ListenerListTest {
 
         holder.postEvent(event, (e, l, ex) -> {
             assertSame(event, e);
-            assertSame(holder.sortedListenersArray[0], l);
+            assertSame(Objects.requireNonNull(holder.sortedListenersArray)[0], l);
             assertSame(listener.originalException(), ex);
             return ListenerExceptionHandler.Result.BREAK;
         });

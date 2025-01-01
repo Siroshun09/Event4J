@@ -47,23 +47,23 @@ class ListenerSubscriberTest {
         assertTrue(subscriber.listenersFor(SampleEvent.class).isEmpty());
 
         var subscribed1 = subscriber.subscribe(SampleEvent.class, "test-1", emptyConsumer());
-        assertEquals(subscribed1.eventClass(), SampleEvent.class);
-        assertEquals(subscribed1.key(), "test-1");
-        assertEquals(subscribed1.order(), Priority.NORMAL);
+        assertEquals(SampleEvent.class, subscribed1.eventClass());
+        assertEquals("test-1", subscribed1.key());
+        assertEquals(Priority.NORMAL, subscribed1.order());
         assertEquals(List.of(subscribed1), subscriber.allListeners());
         assertEquals(List.of(subscribed1), subscriber.listenersFor(SampleEvent.class));
 
         var subscribed2 = subscriber.subscribe(SampleEvent.class, "test-2", emptyConsumer(), Priority.HIGH);
-        assertEquals(subscribed2.eventClass(), SampleEvent.class);
-        assertEquals(subscribed2.key(), "test-2");
-        assertEquals(subscribed2.order(), Priority.HIGH);
+        assertEquals(SampleEvent.class, subscribed2.eventClass());
+        assertEquals("test-2", subscribed2.key());
+        assertEquals(Priority.HIGH, subscribed2.order());
         assertEquals(List.of(subscribed1, subscribed2), subscriber.allListeners());
         assertEquals(List.of(subscribed1, subscribed2), subscriber.listenersFor(SampleEvent.class));
 
         var subscribed3 = subscriber.subscribe(SampleEvent.class, factory -> factory.key("test-3").consumer(emptyConsumer()).order(Priority.LOW));
-        assertEquals(subscribed3.eventClass(), SampleEvent.class);
-        assertEquals(subscribed3.key(), "test-3");
-        assertEquals(subscribed3.order(), Priority.LOW);
+        assertEquals(SampleEvent.class, subscribed3.eventClass());
+        assertEquals("test-3", subscribed3.key());
+        assertEquals(Priority.LOW, subscribed3.order());
         assertEquals(List.of(subscribed3, subscribed1, subscribed2), subscriber.allListeners());
         assertEquals(List.of(subscribed3, subscribed1, subscribed2), subscriber.listenersFor(SampleEvent.class));
 
