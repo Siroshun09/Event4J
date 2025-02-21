@@ -4,7 +4,7 @@ jspecify = "1.0.0"
 annotations = "26.0.2"
 
 # testing tool
-junit = "5.11.4"
+junit = "5.12.0"
 
 [libraries]
 # libraries
