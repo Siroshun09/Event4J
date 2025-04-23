@@ -6,6 +6,9 @@ annotations = "26.0.2"
 # testing tool
 junit = "5.12.2"
 
+# plugins
+gradle-plugins = "1.0.0"
+
 [libraries]
 # libraries
 annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
@@ -14,3 +17,11 @@ jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 # testing tool
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+
+[plugins]
+
+jcommon = { id = "dev.siroshun.gradle.plugins.jcommon", version.ref = "gradle-plugins" }
+aggregated-javadoc = { id = "dev.siroshun.gradle.plugins.aggregated-javadoc", version.ref = "gradle-plugins" }
+aggregated-javadoc-collector = { id = "dev.siroshun.gradle.plugins.aggregated-javadoc-collector", version.ref = "gradle-plugins" }
+mavenCentralPortal = { id = "dev.siroshun.gradle.plugins.maven-central-portal", version.ref = "gradle-plugins" }
+mavenPublication = { id = "dev.siroshun.gradle.plugins.maven-publication", version.ref = "gradle-plugins" }

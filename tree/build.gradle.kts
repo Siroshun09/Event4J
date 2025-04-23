@@ -23,15 +23,11 @@
  */
 
 plugins {
-    id("event4j.common-conventions")
-    id("event4j.publication")
+    alias(libs.plugins.aggregated.javadoc.collector)
+    alias(libs.plugins.mavenPublication)
 }
 
 dependencies {
     api(projects.event4jApi)
     testImplementation(projects.event4jTestHelper)
-}
-
-afterEvaluate {
-    aggregator.JavadocAggregator.addProject(this)
 }

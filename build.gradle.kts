@@ -23,12 +23,33 @@
  */
 
 plugins {
-    id("event4j.aggregate-javadoc")
+    alias(libs.plugins.jcommon)
+    alias(libs.plugins.aggregated.javadoc)
+    alias(libs.plugins.mavenPublication)
+    alias(libs.plugins.mavenCentralPortal)
 }
 
-tasks {
-    register<Delete>("clean") {
-        group = "build"
-        layout.buildDirectory.get().asFile.deleteRecursively()
+jcommon {
+    javaVersion = JavaVersion.VERSION_17
+
+    commonDependencies {
+        compileOnlyApi(libs.annotations)
+        compileOnlyApi(libs.jspecify)
+
+        testImplementation(platform(libs.junit.bom))
+        testImplementation(libs.junit.jupiter)
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
+}
+
+aggregatedJavadoc {
+    modules = listOf("org.jetbrains.annotations", "org.jspecify")
+}
+
+mavenPublication {
+    localRepository(mavenCentralPortal.stagingDirectory)
+    description("An event library for Java.")
+    mitLicense()
+    developer("Siroshun09")
+    github("Siroshun09/Event4J")
 }
