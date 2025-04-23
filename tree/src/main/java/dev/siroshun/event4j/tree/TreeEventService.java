@@ -28,10 +28,8 @@ import dev.siroshun.event4j.api.caller.EventCaller;
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.listener.ListenerSubscriber;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.NullUnmarked;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 
@@ -47,7 +45,6 @@ import java.util.Comparator;
  * @param <E> the event type
  * @param <O> the order type
  */
-@NullMarked
 public interface TreeEventService<K, E, O> {
 
     /**
@@ -59,7 +56,7 @@ public interface TreeEventService<K, E, O> {
      * @return a new {@link Factory}
      */
     @Contract(value = " -> new", pure = true)
-    static <K, E, O> TreeEventService.Factory<K, E, O> factory() {
+    static <K, E, O> TreeEventService.@NotNull Factory<K, E, O> factory() {
         return new TreeEventServiceImpl.FactoryImpl<>(null, null, null);
     }
 
@@ -68,14 +65,14 @@ public interface TreeEventService<K, E, O> {
      *
      * @return the {@link EventCaller}
      */
-    EventCaller<E> caller();
+    @NotNull EventCaller<E> caller();
 
     /**
      * Gets the {@link ListenerSubscriber} of this {@link TreeEventService}.
      *
      * @return the {@link ListenerSubscriber}
      */
-    ListenerSubscriber<K, E, O> subscriber();
+    @NotNull ListenerSubscriber<K, E, O> subscriber();
 
     /**
      * A factory interface to create {@link TreeEventService}.
@@ -86,7 +83,6 @@ public interface TreeEventService<K, E, O> {
      * @param <E> the event type
      * @param <O> the order type
      */
-    @NullUnmarked
     interface Factory<K, E, O> {
 
         /**
@@ -97,7 +93,7 @@ public interface TreeEventService<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_ -> new")
-        <K1> @NonNull Factory<K1, E, O> keyClass(Class<? extends K1> keyClass);
+        <K1> @NotNull Factory<K1, E, O> keyClass(Class<? extends K1> keyClass);
 
         /**
          * Sets the root event class.
@@ -107,7 +103,7 @@ public interface TreeEventService<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_ -> new")
-        <E1> @NonNull Factory<K, E1, O> eventClass(Class<? extends E1> eventClass);
+        <E1> @NotNull Factory<K, E1, O> eventClass(Class<? extends E1> eventClass);
 
         /**
          * Sets the {@link Comparator} to sort listeners by the specified orders.
@@ -117,7 +113,7 @@ public interface TreeEventService<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_ -> new")
-        <O1> @NonNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator);
+        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator);
 
         /**
          * Sets the {@link Comparator} and the default order.
@@ -131,7 +127,7 @@ public interface TreeEventService<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_, _ -> new")
-        <O1> @NonNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, @Nullable O1 defaultOrder);
+        <O1> @NotNull Factory<K, E, O1> orderComparator(Comparator<? super O1> orderComparator, @Nullable O1 defaultOrder);
 
         /**
          * Sets the {@link Comparator} and the default order.
@@ -144,7 +140,7 @@ public interface TreeEventService<K, E, O> {
          * @return the new {@link Factory}
          */
         @Contract("_ -> new")
-        <O1 extends Comparable<O1>> @NonNull Factory<K, E, O1> defaultOrder(@NonNull O1 defaultOrder);
+        <O1 extends Comparable<O1>> @NotNull Factory<K, E, O1> defaultOrder(@NotNull O1 defaultOrder);
 
         /**
          * Creates a new {@link TreeEventService} with {@link ListenerExceptionHandler#continueHandler()}.
@@ -152,7 +148,7 @@ public interface TreeEventService<K, E, O> {
          * @return a new {@link TreeEventService}
          */
         @Contract("-> new")
-        @NonNull TreeEventService<K, E, O> create();
+        @NotNull TreeEventService<K, E, O> create();
 
         /**
          * Creates a new {@link TreeEventService} with the custom {@link ListenerExceptionHandler}.
@@ -161,7 +157,7 @@ public interface TreeEventService<K, E, O> {
          * @return a new {@link TreeEventService}
          */
         @Contract("_ -> new")
-        @NonNull TreeEventService<K, E, O> create(@NonNull ListenerExceptionHandler<K, E, O> exceptionHandler);
+        @NotNull TreeEventService<K, E, O> create(@NotNull ListenerExceptionHandler<K, E, O> exceptionHandler);
     }
 
 }

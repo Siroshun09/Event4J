@@ -28,8 +28,8 @@ import dev.siroshun.event4j.api.listener.ListenerFactory;
 import dev.siroshun.event4j.api.listener.ListenerSubscriber;
 import dev.siroshun.event4j.api.listener.SubscribedListener;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,7 +41,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-@NullMarked
+@NotNullByDefault
 class ListenerSubscriberImpl<K, E, O> implements ListenerSubscriber<K, E, O> {
 
     private final ListenerList<K, E, O> listenerList;

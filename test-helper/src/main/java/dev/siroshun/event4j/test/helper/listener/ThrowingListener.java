@@ -25,11 +25,11 @@
 package dev.siroshun.event4j.test.helper.listener;
 
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.function.Consumer;
 
-@NullMarked
+@NotNullByDefault
 public class ThrowingListener<E> implements Consumer<E> {
 
     @Contract(" -> new")

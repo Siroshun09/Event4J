@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.listener;
 
 import dev.siroshun.event4j.api.caller.EventCaller;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 
 /**
  * An interface to handle the exception that is thrown from {@link SubscribedListener#consumer()}.
@@ -35,7 +35,7 @@ import org.jspecify.annotations.NullMarked;
  * @param <O> the order type
  */
 @FunctionalInterface
-@NullMarked
+@NotNullByDefault
 public interface ListenerExceptionHandler<K, E, O> {
 
     /**

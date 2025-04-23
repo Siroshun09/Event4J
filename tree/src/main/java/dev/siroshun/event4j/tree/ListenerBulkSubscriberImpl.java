@@ -27,8 +27,8 @@ package dev.siroshun.event4j.tree;
 import dev.siroshun.event4j.api.listener.ListenerFactory;
 import dev.siroshun.event4j.api.listener.ListenerSubscriber;
 import dev.siroshun.event4j.api.listener.SubscribedListener;
-import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashMap;
@@ -46,13 +46,13 @@ class ListenerBulkSubscriberImpl<K, E, O> implements ListenerSubscriber.BulkSubs
 
     private final Map<Class<? extends E>, TypedListeners<K, ? extends E, O>> listenersByClass = new HashMap<>();
 
-    ListenerBulkSubscriberImpl(@NonNull ListenerList<K, E, O> listenerList, @UnknownNullability O defaultOrder) {
+    ListenerBulkSubscriberImpl(@NotNull ListenerList<K, E, O> listenerList, @UnknownNullability O defaultOrder) {
         this.listenerList = listenerList;
         this.defaultOrder = defaultOrder;
     }
 
     @Override
-    public <T extends E> ListenerSubscriber.@NonNull BulkSubscriber<K, E, O> add(@NonNull Class<T> eventClass, @NonNull Consumer<? super ListenerFactory<K, T, O>> builder) {
+    public <T extends E> ListenerSubscriber.@NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull Consumer<? super ListenerFactory<K, T, O>> builder) {
         Objects.requireNonNull(eventClass, "eventClass cannot be null.");
         Objects.requireNonNull(builder, "builder cannot be null.");
 
@@ -66,7 +66,7 @@ class ListenerBulkSubscriberImpl<K, E, O> implements ListenerSubscriber.BulkSubs
     }
 
     @Override
-    public <T extends E> ListenerSubscriber.@NonNull BulkSubscriber<K, E, O> add(@NonNull Class<T> eventClass, @NonNull K key, @NonNull Consumer<? super T> consumer) {
+    public <T extends E> ListenerSubscriber.@NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer) {
         Objects.requireNonNull(eventClass, "eventClass cannot be null.");
         Objects.requireNonNull(key, "key cannot be null.");
         Objects.requireNonNull(consumer, "consumer cannot be null.");
@@ -76,7 +76,7 @@ class ListenerBulkSubscriberImpl<K, E, O> implements ListenerSubscriber.BulkSubs
     }
 
     @Override
-    public <T extends E> ListenerSubscriber.@NonNull BulkSubscriber<K, E, O> add(@NonNull Class<T> eventClass, @NonNull K key, @NonNull Consumer<? super T> consumer, @Nullable O order) {
+    public <T extends E> ListenerSubscriber.@NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer, @Nullable O order) {
         Objects.requireNonNull(eventClass, "eventClass cannot be null.");
         Objects.requireNonNull(key, "key cannot be null.");
         Objects.requireNonNull(consumer, "consumer cannot be null.");
@@ -85,21 +85,21 @@ class ListenerBulkSubscriberImpl<K, E, O> implements ListenerSubscriber.BulkSubs
         return this;
     }
 
-    private <T extends E> void addListener(@NonNull SubscribedListener<K, T, O> listener) {
+    private <T extends E> void addListener(@NotNull SubscribedListener<K, T, O> listener) {
         this.listeners(listener.eventClass()).add(listener);
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends E> @NonNull TypedListeners<K, T, O> listeners(@NonNull Class<T> eventClass) {
+    private <T extends E> @NotNull TypedListeners<K, T, O> listeners(@NotNull Class<T> eventClass) {
         return (TypedListeners<K, T, O>) this.listenersByClass.computeIfAbsent(eventClass, TypedListeners::new);
     }
 
     @Override
-    public @NonNull List<SubscribedListener<K, ? extends E, O>> subscribe() {
+    public @NotNull List<SubscribedListener<K, ? extends E, O>> subscribe() {
         return this.listenersByClass.values().stream().flatMap(this::subscribeAll).toList();
     }
 
-    private <T extends E> @NonNull Stream<SubscribedListener<K, ? extends E, O>> subscribeAll(@NonNull TypedListeners<K, T, O> listeners) {
+    private <T extends E> @NotNull Stream<SubscribedListener<K, ? extends E, O>> subscribeAll(@NotNull TypedListeners<K, T, O> listeners) {
         this.listenerList.holder(listeners.eventClass()).modifyListeners(list -> list.addAll(listeners.list()));
         return listeners.list().stream().map(Function.identity());
     }

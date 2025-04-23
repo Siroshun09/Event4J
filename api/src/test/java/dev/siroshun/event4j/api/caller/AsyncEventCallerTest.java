@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.caller;
 
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -73,7 +73,7 @@ class AsyncEventCallerTest {
         Assertions.assertThrows(NullPointerException.class, () -> async.call(new SampleEvent(), null));
     }
 
-    @NullMarked
+    @NotNullByDefault
     private static final class CountingEventCaller implements EventCaller<SampleEvent> {
 
         private final AtomicInteger counter = new AtomicInteger();

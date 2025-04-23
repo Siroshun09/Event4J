@@ -34,7 +34,6 @@ jcommon {
 
     commonDependencies {
         compileOnlyApi(libs.annotations)
-        compileOnlyApi(libs.jspecify)
 
         testImplementation(platform(libs.junit.bom))
         testImplementation(libs.junit.jupiter)
@@ -43,7 +42,7 @@ jcommon {
 }
 
 aggregatedJavadoc {
-    modules = listOf("org.jetbrains.annotations", "org.jspecify")
+    modules = listOf("org.jetbrains.annotations")
 }
 
 mavenPublication {

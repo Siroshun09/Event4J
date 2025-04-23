@@ -26,9 +26,9 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.listener.SubscribedListener;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 import java.util.function.Consumer;
 
-@NullMarked
+@NotNullByDefault
 class ListenerList<K, E, O> {
 
     private final Class<E> eventClass;

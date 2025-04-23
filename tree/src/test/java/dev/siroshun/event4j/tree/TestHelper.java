@@ -26,12 +26,12 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.priority.Priority;
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.function.Consumer;
 
-@NullMarked
+@NotNullByDefault
 final class TestHelper {
 
     static ListenerList<String, SampleEvent, Priority> newListenerList() {

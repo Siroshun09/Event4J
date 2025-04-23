@@ -25,8 +25,8 @@
 package dev.siroshun.event4j.api.listener;
 
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.function.Predicate;
  * @param <E> the event type
  * @param <O> the order type
  */
-@NullMarked
+@NotNullByDefault
 public interface ListenerSubscriber<K, E, O> {
 
     /**

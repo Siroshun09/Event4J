@@ -28,7 +28,7 @@ import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.priority.Priority;
 import dev.siroshun.event4j.test.helper.event.ExtendedSampleEvent;
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -40,7 +40,7 @@ import static dev.siroshun.event4j.tree.TestHelper.newListener;
 import static dev.siroshun.event4j.tree.TestHelper.newListenerList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@NullMarked
+@NotNullByDefault
 class EventCallerTest {
 
     @Test

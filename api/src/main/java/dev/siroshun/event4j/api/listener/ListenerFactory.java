@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.listener;
 
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -45,7 +45,7 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NonNull
+    @NotNull
     ListenerFactory<K, E, O> key(K key);
 
     /**
@@ -55,7 +55,7 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NonNull
+    @NotNull
     ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
 
     /**
@@ -65,7 +65,7 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NonNull
+    @NotNull
     ListenerFactory<K, E, O> order(O order);
 
 }

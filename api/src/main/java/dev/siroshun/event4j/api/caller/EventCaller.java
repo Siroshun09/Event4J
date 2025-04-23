@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.caller;
 
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  * @param <E> the event type
  */
 @FunctionalInterface
-@NullMarked
+@NotNullByDefault
 public interface EventCaller<E> {
 
     /**

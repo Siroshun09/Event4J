@@ -26,11 +26,11 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.caller.EventCaller;
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 
-@NullMarked
+@NotNullByDefault
 class EventCallerImpl<K, E, O> implements EventCaller<E> {
 
     private final ListenerList<K, E, O> listenerList;

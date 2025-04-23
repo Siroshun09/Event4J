@@ -24,13 +24,13 @@
 
 package dev.siroshun.event4j.api.caller;
 
-import org.jspecify.annotations.NullMarked;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-@NullMarked
+@NotNullByDefault
 final class AsyncEventCaller<E> implements EventCaller<E> {
 
     private final EventCaller<E> eventCaller;
