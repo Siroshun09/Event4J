@@ -28,15 +28,15 @@ If you need implementations of api, you can change `event4j-api` to `event4j-tre
 #### For Gradle:
 
 ```groovy
-    dependencies {
-        compile 'dev.siroshun.event4j:event4j-api:4.0.1'
-    }
+dependencies {
+    compile 'dev.siroshun.event4j:event4j-api:4.0.1'
+}
 ```
 
 ```kotlin
-    dependencies {
-        implementation("dev.siroshun.event4j:event4j-api:4.0.1")
-    }
+dependencies {
+    implementation("dev.siroshun.event4j:event4j-api:4.0.1")
+}
 ```
 
 ## Documentations

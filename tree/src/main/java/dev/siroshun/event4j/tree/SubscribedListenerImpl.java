@@ -31,8 +31,8 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.function.Consumer;
 
 record SubscribedListenerImpl<K, E, O>(
-        @NotNull Class<E> eventClass,
-        @NotNull K key,
-        @NotNull Consumer<? super E> consumer,
-        @UnknownNullability O order) implements SubscribedListener<K, E, O> {
+    @NotNull Class<E> eventClass,
+    @NotNull K key,
+    @NotNull Consumer<? super E> consumer,
+    @UnknownNullability O order) implements SubscribedListener<K, E, O> {
 }

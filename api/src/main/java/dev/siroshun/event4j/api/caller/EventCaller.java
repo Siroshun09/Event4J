@@ -43,9 +43,9 @@ public interface EventCaller<E> {
     /**
      * Creates a new {@link EventCaller} that calls {@link #call(Object)} on the given {@link Executor}.
      *
-     * @param caller the original {@link EventCaller}
+     * @param caller   the original {@link EventCaller}
      * @param executor the {@link Executor} to use calling {@link #call(Object)}
-     * @param <E> the event type
+     * @param <E>      the event type
      * @return a new {@link EventCaller}
      */
     @Contract(value = "_, _ -> new", pure = true)
@@ -65,9 +65,9 @@ public interface EventCaller<E> {
     /**
      * Calls the event.
      *
-     * @param event the event instance
+     * @param event    the event instance
      * @param callback the {@link Consumer} that accepts the event after calling.
-     * @param <T>   the event type that inherits from {@link E}
+     * @param <T>      the event type that inherits from {@link E}
      */
     default <T extends E> void call(T event, Consumer<? super T> callback) {
         Objects.requireNonNull(event, "event cannot be null.");

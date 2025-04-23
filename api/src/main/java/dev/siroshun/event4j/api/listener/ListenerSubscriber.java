@@ -56,7 +56,7 @@ public interface ListenerSubscriber<K, E, O> {
      * Gets the existing {@link SubscribedListener}s for the specified event.
      *
      * @param eventClass the class of the event
-     * @param <T> the event type
+     * @param <T>        the event type
      * @return the existing {@link SubscribedListener}s for the specified event
      */
     <T extends E> List<SubscribedListener<K, T, O>> listenersFor(Class<T> eventClass);
