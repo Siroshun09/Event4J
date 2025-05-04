@@ -1,0 +1,12 @@
+name: Deploy Javadoc to Cloudflare
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-javadoc:
+    uses: Siroshun09/javadoc-page-template/.github/workflows/deploy-javadoc.yml@main
+    with:
+      project_name: Event4J
+      project_description: A simple event library for Java.
+      custom_domain: javadoc.siroshun.dev
+      javadocs_branch: gh-pages
