@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"dev.siroshun.event4j.api.caller"},{"l":"dev.siroshun.event4j.api.listener"},{"l":"dev.siroshun.event4j.api.priority"},{"l":"dev.siroshun.event4j.tree"}];updateSearchResults();
