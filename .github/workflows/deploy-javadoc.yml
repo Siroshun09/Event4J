@@ -10,3 +10,5 @@ jobs:
       project_description: A simple event library for Java.
       custom_domain: javadoc.siroshun.dev
       javadocs_branch: javadoc
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
