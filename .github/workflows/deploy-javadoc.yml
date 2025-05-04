@@ -9,4 +9,4 @@ jobs:
       project_name: Event4J
       project_description: A simple event library for Java.
       custom_domain: javadoc.siroshun.dev
-      javadocs_branch: gh-pages
+      javadocs_branch: javadoc
