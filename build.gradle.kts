@@ -42,7 +42,7 @@ jcommon {
 }
 
 aggregatedJavadoc {
-    modules = listOf("org.jetbrains.annotations")
+    name = "Event4J"
 }
 
 mavenPublication {
