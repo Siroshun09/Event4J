@@ -90,7 +90,7 @@ class ListenerSubscriberTest {
         var listeners = new ArrayList<>(subscriber.allListeners());
 
         for (int i = 0, size = listeners.size(); i < size; i++) {
-            var subscribed = listeners.remove(0);
+            var subscribed = listeners.removeFirst();
             subscriber.unsubscribe(subscribed);
             assertEquals(listeners, subscriber.allListeners());
         }
