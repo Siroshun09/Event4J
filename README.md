@@ -9,7 +9,7 @@ Event4J is the simple event library for Java.
 
 ## Requirements
 
-- Java 17+
+- Java 21+
 
 ## Usage
 

@@ -30,7 +30,7 @@ plugins {
 }
 
 jcommon {
-    javaVersion = JavaVersion.VERSION_17
+    javaVersion = JavaVersion.VERSION_21
 
     commonDependencies {
         compileOnlyApi(libs.annotations)
