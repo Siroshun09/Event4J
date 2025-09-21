@@ -26,24 +26,15 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.caller.EventCaller;
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-@NotNullByDefault
-class EventCallerImpl<K, E, O> implements EventCaller<E> {
-
-    private final ListenerList<K, E, O> listenerList;
-    private final ListenerExceptionHandler<K, E, O> exceptionHandler;
-
-    EventCallerImpl(ListenerList<K, E, O> listenerList,
-                    ListenerExceptionHandler<K, E, O> exceptionHandler) {
-        this.listenerList = listenerList;
-        this.exceptionHandler = exceptionHandler;
-    }
+record EventCallerImpl<K, E, O>(@NotNull ListenerList<K, E, O> listenerList,
+                                @NotNull ListenerExceptionHandler<K, E, O> exceptionHandler) implements EventCaller<E> {
 
     @Override
-    public void call(E event) {
+    public void call(@NotNull E event) {
         Objects.requireNonNull(event);
 
         var firstHolder = this.listenerList.holder(event.getClass().asSubclass(this.listenerList.eventClass()));

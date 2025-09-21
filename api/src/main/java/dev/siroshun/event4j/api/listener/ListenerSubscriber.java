@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.listener;
 
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -42,7 +42,6 @@ import java.util.function.Predicate;
  * @param <E> the event type
  * @param <O> the order type
  */
-@NotNullByDefault
 public interface ListenerSubscriber<K, E, O> {
 
     /**
@@ -50,7 +49,7 @@ public interface ListenerSubscriber<K, E, O> {
      *
      * @return all existing {@link SubscribedListener}s
      */
-    Collection<SubscribedListener<K, ? extends E, O>> allListeners();
+    @NotNull Collection<SubscribedListener<K, ? extends E, O>> allListeners();
 
     /**
      * Gets the existing {@link SubscribedListener}s for the specified event.
@@ -59,7 +58,7 @@ public interface ListenerSubscriber<K, E, O> {
      * @param <T>        the event type
      * @return the existing {@link SubscribedListener}s for the specified event
      */
-    <T extends E> List<SubscribedListener<K, T, O>> listenersFor(Class<T> eventClass);
+    @NotNull <T extends E> List<SubscribedListener<K, T, O>> listenersFor(@NotNull Class<T> eventClass);
 
     /**
      * Subscribes a new listener for the specified event.
@@ -69,7 +68,7 @@ public interface ListenerSubscriber<K, E, O> {
      * @param <T>        the event type
      * @return a {@link SubscribedListener}
      */
-    <T extends E> SubscribedListener<K, T, O> subscribe(Class<T> eventClass, Consumer<? super ListenerFactory<K, T, O>> builder);
+    @NotNull <T extends E> SubscribedListener<K, T, O> subscribe(@NotNull Class<T> eventClass, @NotNull Consumer<? super ListenerFactory<K, T, O>> builder);
 
     /**
      * Subscribes a new listener for the specified event.
@@ -80,7 +79,7 @@ public interface ListenerSubscriber<K, E, O> {
      * @param <T>        the event type
      * @return a {@link SubscribedListener}
      */
-    <T extends E> SubscribedListener<K, T, O> subscribe(Class<T> eventClass, K key, Consumer<? super T> consumer);
+    <T extends E> @NotNull SubscribedListener<K, T, O> subscribe(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer);
 
     /**
      * Subscribes a new listener for the specified event.
@@ -100,35 +99,35 @@ public interface ListenerSubscriber<K, E, O> {
      * @return a new {@link BulkSubscriber}
      */
     @Contract("-> new")
-    BulkSubscriber<K, E, O> bulkSubscriber();
+    @NotNull BulkSubscriber<K, E, O> bulkSubscriber();
 
     /**
      * Unsubscribes the specified {@link SubscribedListener}.
      *
      * @param subscribedListener the {@link SubscribedListener} to unsubscribe
      */
-    void unsubscribe(SubscribedListener<K, ? extends E, O> subscribedListener);
+    void unsubscribe(@NotNull SubscribedListener<K, ? extends E, O> subscribedListener);
 
     /**
      * Unsubscribes the specified {@link SubscribedListener}s.
      *
      * @param subscribedListeners the {@link SubscribedListener}s to unsubscribe
      */
-    void unsubscribeAll(Collection<SubscribedListener<K, ? extends E, O>> subscribedListeners);
+    void unsubscribeAll(@NotNull Collection<SubscribedListener<K, ? extends E, O>> subscribedListeners);
 
     /**
      * Unsubscribes listeners by the specified key.
      *
      * @param key the key
      */
-    void unsubscribeByKey(K key);
+    void unsubscribeByKey(@NotNull K key);
 
     /**
      * Unsubscribes all listeners that satisfy the given {@link Predicate}.
      *
      * @param predicate a predicate which returns true for listeners to be unsubscribed
      */
-    void unsubscribeIf(Predicate<SubscribedListener<K, ? extends E, O>> predicate);
+    void unsubscribeIf(@NotNull Predicate<SubscribedListener<K, ? extends E, O>> predicate);
 
     /**
      * An interface for subscribing multiple listeners at once.
@@ -148,7 +147,7 @@ public interface ListenerSubscriber<K, E, O> {
          * @return this {@link BulkSubscriber}
          */
         @Contract("_, _ -> this")
-        <T extends E> BulkSubscriber<K, E, O> add(Class<T> eventClass, Consumer<? super ListenerFactory<K, T, O>> builder);
+        <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull Consumer<? super ListenerFactory<K, T, O>> builder);
 
         /**
          * Adds a new listener for the specified event.
@@ -160,7 +159,7 @@ public interface ListenerSubscriber<K, E, O> {
          * @return this {@link BulkSubscriber}
          */
         @Contract("_, _, _ -> this")
-        <T extends E> BulkSubscriber<K, E, O> add(Class<T> eventClass, K key, Consumer<? super T> consumer);
+        <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer);
 
         /**
          * Adds a new listener for the specified event.
@@ -173,14 +172,14 @@ public interface ListenerSubscriber<K, E, O> {
          * @return this {@link BulkSubscriber}
          */
         @Contract("_, _, _, _ -> this")
-        <T extends E> BulkSubscriber<K, E, O> add(Class<T> eventClass, K key, Consumer<? super T> consumer, @Nullable O order);
+        <T extends E> @NotNull BulkSubscriber<K, E, O> add(@NotNull Class<T> eventClass, @NotNull K key, @NotNull Consumer<? super T> consumer, @Nullable O order);
 
         /**
          * Subscribes added listeners.
          *
          * @return {@link SubscribedListener}s
          */
-        List<SubscribedListener<K, ? extends E, O>> subscribe();
+        @NotNull List<SubscribedListener<K, ? extends E, O>> subscribe();
 
     }
 }

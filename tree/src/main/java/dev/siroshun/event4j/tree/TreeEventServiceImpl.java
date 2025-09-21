@@ -55,17 +55,9 @@ class TreeEventServiceImpl<K, E, O> implements TreeEventService<K, E, O> {
         return this.subscriber;
     }
 
-    static final class FactoryImpl<K, E, O> implements TreeEventService.Factory<K, E, O> {
-
-        private final Class<E> eventClass;
-        private final Comparator<O> orderComparator;
-        private final O defaultOrder;
-
-        FactoryImpl(Class<E> eventClass, Comparator<O> orderComparator, O defaultOrder) {
-            this.eventClass = eventClass;
-            this.orderComparator = orderComparator;
-            this.defaultOrder = defaultOrder;
-        }
+    record FactoryImpl<K, E, O>(Class<E> eventClass,
+                                Comparator<O> orderComparator,
+                                O defaultOrder) implements Factory<K, E, O> {
 
         @SuppressWarnings("unchecked")
         @Override

@@ -24,7 +24,7 @@
 
 package dev.siroshun.event4j.api.listener;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.function.Consumer;
@@ -36,7 +36,6 @@ import java.util.function.Consumer;
  * @param <E> the event type
  * @param <O> the order type
  */
-@NotNullByDefault
 public interface SubscribedListener<K, E, O> {
 
     /**
@@ -44,21 +43,21 @@ public interface SubscribedListener<K, E, O> {
      *
      * @return the key of this listener
      */
-    K key();
+    @NotNull K key();
 
     /**
      * Gets the event class of this listener.
      *
      * @return the event class of this listener
      */
-    Class<E> eventClass();
+    @NotNull Class<E> eventClass();
 
     /**
      * Gets the {@link Consumer} of this listener.
      *
      * @return the {@link Consumer} of this listener
      */
-    Consumer<? super E> consumer();
+    @NotNull Consumer<? super E> consumer();
 
     /**
      * Gets the order of this listener.

@@ -25,7 +25,7 @@
 package dev.siroshun.event4j.api.listener;
 
 import dev.siroshun.event4j.api.caller.EventCaller;
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * An interface to handle the exception that is thrown from {@link SubscribedListener#consumer()}.
@@ -35,7 +35,6 @@ import org.jetbrains.annotations.NotNullByDefault;
  * @param <O> the order type
  */
 @FunctionalInterface
-@NotNullByDefault
 public interface ListenerExceptionHandler<K, E, O> {
 
     /**
@@ -46,7 +45,7 @@ public interface ListenerExceptionHandler<K, E, O> {
      * @param <O> the order type
      * @return a {@link ListenerExceptionHandler} that returns {@link Result#CONTINUE}
      */
-    static <K, E, O> ListenerExceptionHandler<K, E, O> continueHandler() {
+    static <K, E, O> @NotNull ListenerExceptionHandler<K, E, O> continueHandler() {
         return (event, listener, e) -> Result.CONTINUE;
     }
 
@@ -58,7 +57,7 @@ public interface ListenerExceptionHandler<K, E, O> {
      * @param exception the thrown exception
      * @return the {@link Result} that indicates what the {@link EventCaller} should do next
      */
-    Result handleException(E event, SubscribedListener<K, ? extends E, O> listener, Throwable exception);
+    @NotNull Result handleException(@NotNull E event, @NotNull SubscribedListener<K, ? extends E, O> listener, @NotNull Throwable exception);
 
     /**
      * The operations that indicates what the {@link EventCaller} should do next

@@ -26,7 +26,7 @@ package dev.siroshun.event4j.tree;
 
 import dev.siroshun.event4j.api.listener.ListenerExceptionHandler;
 import dev.siroshun.event4j.api.listener.SubscribedListener;
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -41,7 +41,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.StampedLock;
 import java.util.function.Consumer;
 
-@NotNullByDefault
 class ListenerList<K, E, O> {
 
     private final Class<E> eventClass;
@@ -49,28 +48,28 @@ class ListenerList<K, E, O> {
 
     private final Map<Class<? extends E>, Holder<E>> holderMap = new ConcurrentHashMap<>();
 
-    ListenerList(Class<E> eventClass, Comparator<O> orderComparator) {
+    ListenerList(@NotNull Class<E> eventClass, @NotNull Comparator<O> orderComparator) {
         this.eventClass = eventClass;
         this.orderComparator = orderComparator;
     }
 
-    Class<E> eventClass() {
+    @NotNull Class<E> eventClass() {
         return this.eventClass;
     }
 
     @SuppressWarnings("unchecked")
-    <T extends E> Holder<T> holder(Class<T> eventClass) {
+    <T extends E> @NotNull Holder<T> holder(@NotNull Class<T> eventClass) {
         var existing = this.holderMap.get(eventClass);
         return (Holder<T>) (existing != null ? existing : this.createAndPutHolder(eventClass));
     }
 
-    private Holder<E> createAndPutHolder(Class<? extends E> eventClass) {
+    private @NotNull Holder<E> createAndPutHolder(@NotNull Class<? extends E> eventClass) {
         var created = this.createHolder(eventClass);
         return Objects.requireNonNullElse(this.holderMap.putIfAbsent(eventClass, created), created);
     }
 
     @SuppressWarnings("unchecked")
-    private Holder<E> createHolder(Class<? extends E> eventClass) {
+    private @NotNull Holder<E> createHolder(@NotNull Class<? extends E> eventClass) {
         var superClass = eventClass.getSuperclass();
         return new Holder<>(
             superClass != null && this.eventClass.isAssignableFrom(superClass) ?
@@ -80,7 +79,7 @@ class ListenerList<K, E, O> {
         );
     }
 
-    Collection<Holder<E>> holders() {
+    @NotNull Collection<Holder<E>> holders() {
         return this.holderMap.values();
     }
 
@@ -94,7 +93,7 @@ class ListenerList<K, E, O> {
 
         volatile SubscribedListener<K, T, O> @Nullable [] sortedListenersArray;
 
-        Holder(@Nullable Holder<E> parent, Comparator<O> orderComparator) {
+        Holder(@Nullable Holder<E> parent, @NotNull Comparator<O> orderComparator) {
             this.parent = parent;
             this.sorter = Comparator.comparing(SubscribedListener::order, orderComparator);
         }
@@ -103,8 +102,7 @@ class ListenerList<K, E, O> {
             return this.parent;
         }
 
-        @Unmodifiable
-        List<SubscribedListener<K, T, O>> listeners() {
+        @NotNull @Unmodifiable List<SubscribedListener<K, T, O>> listeners() {
             long readLock = this.lock.readLock();
             List<SubscribedListener<K, T, O>> copiedListeners;
 
@@ -118,7 +116,7 @@ class ListenerList<K, E, O> {
         }
 
         @SuppressWarnings("unchecked")
-        void modifyListeners(Consumer<List<SubscribedListener<K, T, O>>> modifier) {
+        void modifyListeners(@NotNull Consumer<List<SubscribedListener<K, T, O>>> modifier) {
             long writeLock = this.lock.writeLock();
 
             try {
@@ -136,7 +134,7 @@ class ListenerList<K, E, O> {
         }
 
         @SuppressWarnings({"unchecked", "UnnecessaryContinue"})
-        boolean postEvent(E event, ListenerExceptionHandler<K, E, O> exceptionHandler) {
+        boolean postEvent(@NotNull E event, @NotNull ListenerExceptionHandler<K, E, O> exceptionHandler) {
             var listeners = this.sortedListenersArray;
 
             if (listeners == null) {
@@ -166,7 +164,7 @@ class ListenerList<K, E, O> {
         }
 
         @SuppressWarnings("unchecked")
-        private static <T extends Throwable> void rethrow(Throwable exception) throws T {
+        private static <T extends Throwable> void rethrow(@NotNull Throwable exception) throws T {
             throw (T) exception;
         }
     }

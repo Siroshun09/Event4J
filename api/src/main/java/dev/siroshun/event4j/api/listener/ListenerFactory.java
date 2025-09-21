@@ -45,8 +45,7 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NotNull
-    ListenerFactory<K, E, O> key(K key);
+    @NotNull ListenerFactory<K, E, O> key(K key);
 
     /**
      * Sets the {@link Consumer}.
@@ -55,8 +54,7 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NotNull
-    ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
+    @NotNull ListenerFactory<K, E, O> consumer(Consumer<? super E> consumer);
 
     /**
      * Sets the order.
@@ -65,7 +63,6 @@ public interface ListenerFactory<K, E, O> {
      * @return this {@link ListenerFactory}
      */
     @Contract("_ -> this")
-    @NotNull
-    ListenerFactory<K, E, O> order(O order);
+    @NotNull ListenerFactory<K, E, O> order(O order);
 
 }

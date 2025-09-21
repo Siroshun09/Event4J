@@ -62,8 +62,7 @@ class ListenerFactoryImpl<K, E, O> implements ListenerFactory<K, E, O> {
         return this;
     }
 
-    @NotNull
-    SubscribedListenerImpl<K, E, O> build() {
+    @NotNull SubscribedListenerImpl<K, E, O> build() {
         Objects.requireNonNull(this.key, "key is not set.");
         Objects.requireNonNull(this.consumer, "consumer is not set.");
         return new SubscribedListenerImpl<>(this.eventClass, this.key, this.consumer, this.order);
