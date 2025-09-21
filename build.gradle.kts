@@ -32,12 +32,10 @@ plugins {
 jcommon {
     javaVersion = JavaVersion.VERSION_21
 
+    setupJUnit(libs.junit.bom)
     commonDependencies {
         compileOnlyApi(libs.annotations)
-
-        testImplementation(platform(libs.junit.bom))
         testImplementation(libs.junit.jupiter)
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 }
 

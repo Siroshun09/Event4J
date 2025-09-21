@@ -24,6 +24,4 @@
 
 dependencies {
     implementation(projects.event4jApi)
-    api(platform(libs.junit.bom))
-    api(libs.junit.jupiter)
 }
