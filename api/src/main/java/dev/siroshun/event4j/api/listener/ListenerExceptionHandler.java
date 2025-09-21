@@ -65,12 +65,12 @@ public interface ListenerExceptionHandler<K, E, O> {
     enum Result {
 
         /**
-         * A {@link Result} that indicates that the {@link EventCaller} should not post the event to subsequent listeners.
+         * A {@link Result} that indicates that the {@link EventCaller} should not post the event to later listeners.
          */
         BREAK,
 
         /**
-         * A {@link Result} that indicates that the {@link EventCaller} should post the event to subsequent listeners.
+         * A {@link Result} that indicates that the {@link EventCaller} should post the event to later listeners.
          */
         CONTINUE,
 

@@ -23,6 +23,6 @@
  */
 
 /**
- * A package of the listener related interfaces.
+ * A package of the listener-related interfaces.
  */
 package dev.siroshun.event4j.api.listener;

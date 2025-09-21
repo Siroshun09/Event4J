@@ -127,17 +127,17 @@ class ListenerListTest {
         assertEquals(0, counter.getAndSet(0));
 
         assertTrue(holder.postEvent(event, ListenerExceptionHandler.continueHandler()));
-        assertEquals(1, counter.getAndSet(0)); // Second listener should be called
+        assertEquals(1, counter.getAndSet(0)); // The second listener should be called
 
         assertFalse(holder.postEvent(event, (e, l, ex) -> ListenerExceptionHandler.Result.BREAK));
-        assertEquals(0, counter.getAndSet(0)); // Second listener should NOT be called
+        assertEquals(0, counter.getAndSet(0)); // The second listener should NOT be called
 
         try {
             holder.postEvent(event, (e, l, ex) -> ListenerExceptionHandler.Result.RETHROW);
             Assertions.fail("Did not throw exception");
         } catch (Throwable e) {
             assertSame(listener.originalException(), e);
-            assertEquals(0, counter.getAndSet(0)); // Second listener should NOT be called
+            assertEquals(0, counter.getAndSet(0)); // The second listener should NOT be called
         }
     }
 }

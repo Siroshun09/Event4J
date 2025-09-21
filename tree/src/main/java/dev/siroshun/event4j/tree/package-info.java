@@ -23,6 +23,6 @@
  */
 
 /**
- * A package of "tree" implementation of Event4J.
+ * A package that provides tree-structured {@link dev.siroshun.event4j.api.caller.EventCaller} implementation.
  */
 package dev.siroshun.event4j.tree;

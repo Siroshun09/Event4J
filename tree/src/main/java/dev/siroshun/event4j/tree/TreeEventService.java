@@ -37,7 +37,7 @@ import java.util.Comparator;
  * An interface for retrieving an instance of {@link EventCaller} and {@link ListenerSubscriber}.
  * <p>
  * When an event is fired, the event's class and parent class listeners (up to the root event class) are invoked.
- * For example, for the root event class A, if there is a B that inherits from A and a C that inherits from it, the listeners are called in the order C -&gt; B -&gt; A.
+ * For example, for the root event class A, if there is a B that inherits from A and a C that inherits from it, the listeners are called in the order C &gt; B &gt; A.
  * <p>
  * The implementation of this interface can be created from {@link TreeEventService.Factory}, that is instanced by {@link TreeEventService#factory()} method.
  *
