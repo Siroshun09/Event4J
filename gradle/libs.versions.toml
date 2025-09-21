@@ -6,7 +6,7 @@ annotations = "26.0.2-1"
 junit = "5.13.4"
 
 # plugins
-gradle-plugins = "1.5.1"
+gradle-plugins = "1.6.0"
 
 [libraries]
 # libraries
