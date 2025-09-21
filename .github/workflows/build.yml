@@ -2,9 +2,22 @@ name: Java CI
 on: [ push, pull_request ]
 
 jobs:
+  build-java17:
+    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
+    with:
+      java-version: '17'
+      upload-artifacts: false
+      upload-test-results: true
   build-java21:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
     with:
       java-version: '21'
+      upload-artifacts: false
+      upload-test-results: true
+  build-java25:
+    uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
+    with:
+      java-version: '25'
+      distribution: 'zulu' # TODO: use temurin when it's available
       upload-artifacts: false
       upload-test-results: true
