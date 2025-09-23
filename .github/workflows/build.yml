@@ -12,6 +12,5 @@ jobs:
     uses: Siroshun09/gh-actions-workflows/.github/workflows/gradle.yml@v1
     with:
       java-version: '25'
-      distribution: 'zulu' # TODO: use temurin when it's available
       upload-artifacts: false
       upload-test-results: true
