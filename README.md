@@ -21,7 +21,7 @@ If you need implementations of api, you can change `event4j-api` to `event4j-tre
     <dependency>
         <groupId>dev.siroshun.event4j</groupId>
         <artifactId>event4j-api</artifactId>
-        <version>4.0.2</version>
+        <version>4.1.0</version>
     </dependency>
 ```
 
@@ -29,13 +29,13 @@ If you need implementations of api, you can change `event4j-api` to `event4j-tre
 
 ```groovy
 dependencies {
-    compile 'dev.siroshun.event4j:event4j-api:4.0.2'
+    compile 'dev.siroshun.event4j:event4j-api:4.1.0'
 }
 ```
 
 ```kotlin
 dependencies {
-    implementation("dev.siroshun.event4j:event4j-api:4.0.2")
+    implementation("dev.siroshun.event4j:event4j-api:4.1.0")
 }
 ```
 
