@@ -25,42 +25,77 @@
 package dev.siroshun.event4j.api.caller;
 
 import dev.siroshun.event4j.test.helper.event.SampleEvent;
-import org.jetbrains.annotations.NotNullByDefault;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 class AsyncEventCallerTest {
 
     @Test
-    void testCall() throws Exception {
-        var caller = new CountingEventCaller();
-        caller.callAsync(new SampleEvent());
-        Thread.sleep(5);
-        Assertions.assertEquals(1, caller.counter.get());
+    void testCall() {
+        SampleEvent originalEvent = new SampleEvent();
+
+        callAsync(
+            caller -> caller.call(originalEvent),
+            event -> Assertions.assertSame(originalEvent, event)
+        );
     }
 
     @Test
     void testCallback() {
-        var caller = new CountingEventCaller();
+        SampleEvent originalEvent = new SampleEvent();
+        AtomicReference<SampleEvent> callbackResult = new AtomicReference<>();
 
-        var event = new SampleEvent();
-        var future = new CompletableFuture<SampleEvent>();
+        callAsync(
+            caller -> caller.call(originalEvent, callbackResult::set),
+            event -> Assertions.assertSame(originalEvent, event)
+        );
 
-        caller.callAsync(event, future::complete);
+        Assertions.assertSame(originalEvent, callbackResult.get());
+    }
 
-        Assertions.assertSame(event, future.join());
-        Assertions.assertEquals(1, caller.counter.get());
+    private static void callAsync(Consumer<EventCaller<SampleEvent>> call, Consumer<SampleEvent> calledEventConsumer) {
+        AtomicInteger counter = new AtomicInteger(0);
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            call.accept(EventCaller.asyncCaller(
+                event -> {
+                    calledEventConsumer.accept(event);
+                    counter.incrementAndGet();
+                },
+                r -> executor.execute(() -> {
+                    r.run();
+                    future.complete(true);
+                })
+            ));
+        }
+
+        Assertions.assertTrue(() -> {
+            try {
+                return future.get(1, TimeUnit.SECONDS);
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                Assertions.fail(e);
+                return false;
+            }
+        });
+        Assertions.assertEquals(1, counter.get());
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void testNullArgument() {
-        var caller = new CountingEventCaller();
+        AtomicInteger counter = new AtomicInteger(0);
+        EventCaller<SampleEvent> caller = e -> counter.incrementAndGet();
         var async = EventCaller.asyncCaller(caller, run -> {
             throw new IllegalStateException("Unexpected executor call");
         });
@@ -71,24 +106,7 @@ class AsyncEventCallerTest {
         Assertions.assertThrows(NullPointerException.class, () -> async.call(null, event -> {
         }));
         Assertions.assertThrows(NullPointerException.class, () -> async.call(new SampleEvent(), null));
-    }
 
-    @NotNullByDefault
-    private static final class CountingEventCaller implements EventCaller<SampleEvent> {
-
-        private final AtomicInteger counter = new AtomicInteger();
-
-        @Override
-        public void call(SampleEvent event) {
-            this.counter.incrementAndGet();
-        }
-
-        private void callAsync(SampleEvent event) {
-            EventCaller.asyncCaller(this, ForkJoinPool.commonPool()).call(event);
-        }
-
-        private void callAsync(SampleEvent event, Consumer<SampleEvent> consumer) {
-            EventCaller.asyncCaller(this, ForkJoinPool.commonPool()).call(event, consumer);
-        }
+        Assertions.assertEquals(0, counter.get());
     }
 }
