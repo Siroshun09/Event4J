@@ -3,7 +3,7 @@
 annotations = "26.1.0"
 
 # testing tool
-junit = "6.1.1"
+junit = "6.1.2"
 
 # plugins
 gradle-plugins = "1.8.4"
