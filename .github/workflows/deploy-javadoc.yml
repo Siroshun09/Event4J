@@ -4,7 +4,7 @@ on:
 
 jobs:
   deploy-javadoc:
-    uses: Siroshun09/javadoc-page-template/.github/workflows/deploy-javadoc.yml@56efaa3eca059251ded9ea24f4a3bb27b16915d4 # main
+    uses: Siroshun09/javadoc-page-template/.github/workflows/deploy-javadoc.yml@09133f1985d2d16f6365b57734648ad53fbb5ff4 # main
     with:
       project_name: Event4J
       project_description: A simple event library for Java.
